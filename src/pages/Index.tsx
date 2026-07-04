@@ -77,18 +77,14 @@ const Floaty: React.FC<React.PropsWithChildren<{ delay?: number; amount?: number
 type Orb = { label: string; href: string; icon: React.ComponentType<any>; color: string };
 
 const orbitIcons: Orb[] = [
-  { label: "GitHub",          href: "https://github.com/muhammadrehanahmed989-bit",                     icon: Github,    color: "#111827" },
-  { label: "Microsoft Learn", href: "https://learn.microsoft.com/en-gb/users/rehanahmad-1241/",         icon: MSIcon,    color: "#0078D4" },
-  { label: "LinkedIn",        href: "https://www.linkedin.com/",                                        icon: Linkedin,  color: "#0A66C2" },
-  { label: "Instagram",       href: "https://www.instagram.com/",                                       icon: Instagram, color: "#E1306C" },
-  { label: "Gmail",           href: "mailto:muhammadrehanahmed989@gmail.com",                           icon: Mail,      color: "#EA4335" },
-  { label: "Meta Ads",        href: "https://www.facebook.com/business/ads",                            icon: Target,    color: "#1877F2" },
-  { label: "Google Ads",      href: "https://ads.google.com/",                                          icon: BarChart3, color: "#34A853" },
-  { label: "Analytics",       href: "https://analytics.google.com/",                                    icon: PieChart,  color: "#F9AB00" },
-  { label: "Tag Manager",     href: "https://tagmanager.google.com/",                                   icon: Tag,       color: "#246FDB" },
-  { label: "Figma",           href: "https://www.figma.com/",                                           icon: Figma,     color: "#A259FF" },
-  { label: "AI",              href: "https://openai.com/",                                              icon: Brain,     color: "#8B5CF6" },
-  { label: "Automation",      href: "https://zapier.com/",                                              icon: Workflow,  color: "#FF4A00" },
+  { label: "GitHub",     href: "https://github.com/muhammadrehanahmed989-bit",             icon: Github,    color: "#111827" },
+  { label: "LinkedIn",   href: "https://www.linkedin.com/",                                icon: Linkedin,  color: "#0A66C2" },
+  { label: "Meta Ads",   href: "https://www.facebook.com/business/ads",                    icon: Target,    color: "#1877F2" },
+  { label: "Google Ads", href: "https://ads.google.com/",                                  icon: BarChart3, color: "#34A853" },
+  { label: "Gmail",      href: "mailto:muhammadrehanahmed989@gmail.com",                   icon: Mail,      color: "#EA4335" },
+  { label: "Figma",      href: "https://www.figma.com/",                                   icon: Figma,     color: "#A259FF" },
+  { label: "AI",         href: "https://openai.com/",                                      icon: Brain,     color: "#8B5CF6" },
+  { label: "Instagram",  href: "https://www.instagram.com/",                               icon: Instagram, color: "#E1306C" },
 ];
 
 const Hero = () => {
