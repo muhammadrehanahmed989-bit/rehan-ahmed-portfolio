@@ -885,7 +885,4 @@ const Index = () => {
     </>
   );
 };
-
-// Nav import needs to resolve — using inline require pattern replaced by proper import.
-import { Nav } from "@/components/Nav";
 export default Index;
