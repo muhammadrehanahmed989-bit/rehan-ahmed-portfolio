@@ -272,7 +272,32 @@ const About = () => (
         </div>
       </div>
 
-      <div className="relative aspect-square max-w-[520px] mx-auto w-full">
+      {/* Mobile / tablet: clean grid layout */}
+      <div className="grid grid-cols-2 gap-4 md:hidden">
+        {pillars.map((p, i) => (
+          <motion.div
+            key={p.label}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ ...spring, delay: i * 0.08 }}
+          >
+            <Floaty amount={5} duration={6 + i} delay={i * 0.3}>
+              <div className="glass glass-border-glow rounded-3xl p-4 h-full">
+                <div className="h-10 w-10 rounded-2xl flex items-center justify-center mb-3"
+                  style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
+                  <p.icon size={18} />
+                </div>
+                <div className="font-display font-semibold text-sm">{p.label}</div>
+                <div className="text-[11px] text-muted-foreground mt-1 leading-snug">{p.desc}</div>
+              </div>
+            </Floaty>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Desktop: radial diagram */}
+      <div className="relative aspect-square max-w-[520px] mx-auto w-full hidden md:block">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
