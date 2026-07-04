@@ -77,18 +77,14 @@ const Floaty: React.FC<React.PropsWithChildren<{ delay?: number; amount?: number
 type Orb = { label: string; href: string; icon: React.ComponentType<any>; color: string };
 
 const orbitIcons: Orb[] = [
-  { label: "GitHub",          href: "https://github.com/muhammadrehanahmed989-bit",                     icon: Github,    color: "#111827" },
-  { label: "Microsoft Learn", href: "https://learn.microsoft.com/en-gb/users/rehanahmad-1241/",         icon: MSIcon,    color: "#0078D4" },
-  { label: "LinkedIn",        href: "https://www.linkedin.com/",                                        icon: Linkedin,  color: "#0A66C2" },
-  { label: "Instagram",       href: "https://www.instagram.com/",                                       icon: Instagram, color: "#E1306C" },
-  { label: "Gmail",           href: "mailto:muhammadrehanahmed989@gmail.com",                           icon: Mail,      color: "#EA4335" },
-  { label: "Meta Ads",        href: "https://www.facebook.com/business/ads",                            icon: Target,    color: "#1877F2" },
-  { label: "Google Ads",      href: "https://ads.google.com/",                                          icon: BarChart3, color: "#34A853" },
-  { label: "Analytics",       href: "https://analytics.google.com/",                                    icon: PieChart,  color: "#F9AB00" },
-  { label: "Tag Manager",     href: "https://tagmanager.google.com/",                                   icon: Tag,       color: "#246FDB" },
-  { label: "Figma",           href: "https://www.figma.com/",                                           icon: Figma,     color: "#A259FF" },
-  { label: "AI",              href: "https://openai.com/",                                              icon: Brain,     color: "#8B5CF6" },
-  { label: "Automation",      href: "https://zapier.com/",                                              icon: Workflow,  color: "#FF4A00" },
+  { label: "GitHub",     href: "https://github.com/muhammadrehanahmed989-bit",             icon: Github,    color: "#111827" },
+  { label: "LinkedIn",   href: "https://www.linkedin.com/",                                icon: Linkedin,  color: "#0A66C2" },
+  { label: "Meta Ads",   href: "https://www.facebook.com/business/ads",                    icon: Target,    color: "#1877F2" },
+  { label: "Google Ads", href: "https://ads.google.com/",                                  icon: BarChart3, color: "#34A853" },
+  { label: "Gmail",      href: "mailto:muhammadrehanahmed989@gmail.com",                   icon: Mail,      color: "#EA4335" },
+  { label: "Figma",      href: "https://www.figma.com/",                                   icon: Figma,     color: "#A259FF" },
+  { label: "AI",         href: "https://openai.com/",                                      icon: Brain,     color: "#8B5CF6" },
+  { label: "Instagram",  href: "https://www.instagram.com/",                               icon: Instagram, color: "#E1306C" },
 ];
 
 const Hero = () => {
@@ -196,29 +192,24 @@ const Hero = () => {
             </Floaty>
 
             {/* Status pill */}
-            <Floaty amount={6} duration={5} className="absolute bottom-[6%] left-1/2 -translate-x-1/2 z-10">
+            <Floaty amount={6} duration={5} className="absolute bottom-[4%] left-1/2 -translate-x-1/2 z-10">
               <div className="glass-strong rounded-full px-4 py-2 flex items-center gap-2 text-xs whitespace-nowrap">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse" />
-                <span className="font-mono">Karachi · Available</span>
+                <span className="font-mono">Faisalabad · Available</span>
               </div>
             </Floaty>
 
-            {/* Orbiting functional icons */}
+            {/* Orbiting functional icons — single evenly spaced ring */}
             {mounted && orbitIcons.map((c, i) => {
-              const ring = i % 2 === 0 ? 0 : 1;
-              const perRing = Math.ceil(orbitIcons.length / 2);
-              const idxInRing = Math.floor(i / 2);
-              const radius = ring === 0 ? "min(240px, 44vw)" : "min(180px, 34vw)";
-              const duration = ring === 0 ? 38 : 30;
-              const dir = ring === 0 ? "" : " reverse";
-              const angleOffset = (idxInRing / perRing) * duration;
+              const duration = 42;
+              const angleOffset = (i / orbitIcons.length) * duration;
               return (
                 <div
                   key={c.label}
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                   style={{
-                    ["--r" as any]: radius,
-                    animation: `orbit ${duration}s linear infinite${dir}`,
+                    ["--r" as any]: "min(240px, 42vw)",
+                    animation: `orbit ${duration}s linear infinite`,
                     animationDelay: `-${angleOffset}s`,
                   }}
                 >
@@ -228,10 +219,10 @@ const Hero = () => {
                       target={c.href.startsWith("mailto:") ? undefined : "_blank"}
                       rel="noopener noreferrer"
                       aria-label={c.label}
-                      className="group relative flex items-center justify-center h-12 w-12 rounded-2xl glass glass-border-glow hover:scale-125 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_-10px_hsl(271_91%_60%/0.35)]"
+                      className="group relative flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 rounded-2xl glass glass-border-glow hover:scale-125 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_-10px_hsl(271_91%_60%/0.35)]"
                       style={{ color: c.color }}
                     >
-                      <c.icon size={20} />
+                      <c.icon size={18} />
                       <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-mono uppercase tracking-wider whitespace-nowrap glass rounded-full px-2 py-1 text-foreground">
                         {c.label}
                       </span>
@@ -281,7 +272,32 @@ const About = () => (
         </div>
       </div>
 
-      <div className="relative aspect-square max-w-[520px] mx-auto w-full">
+      {/* Mobile / tablet: clean grid layout */}
+      <div className="grid grid-cols-2 gap-4 md:hidden">
+        {pillars.map((p, i) => (
+          <motion.div
+            key={p.label}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ ...spring, delay: i * 0.08 }}
+          >
+            <Floaty amount={5} duration={6 + i} delay={i * 0.3}>
+              <div className="glass glass-border-glow rounded-3xl p-4 h-full">
+                <div className="h-10 w-10 rounded-2xl flex items-center justify-center mb-3"
+                  style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
+                  <p.icon size={18} />
+                </div>
+                <div className="font-display font-semibold text-sm">{p.label}</div>
+                <div className="text-[11px] text-muted-foreground mt-1 leading-snug">{p.desc}</div>
+              </div>
+            </Floaty>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Desktop: radial diagram */}
+      <div className="relative aspect-square max-w-[520px] mx-auto w-full hidden md:block">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
@@ -523,7 +539,7 @@ const Contact = () => (
             muhammadrehanahmed989@gmail.com
           </a>
           <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin size={14} /> Karachi, Pakistan · Remote worldwide
+            <MapPin size={14} /> Faisalabad, Pakistan · Remote worldwide
           </div>
 
           <div className="mt-8 grid grid-cols-3 gap-3">
