@@ -192,29 +192,24 @@ const Hero = () => {
             </Floaty>
 
             {/* Status pill */}
-            <Floaty amount={6} duration={5} className="absolute bottom-[6%] left-1/2 -translate-x-1/2 z-10">
+            <Floaty amount={6} duration={5} className="absolute bottom-[4%] left-1/2 -translate-x-1/2 z-10">
               <div className="glass-strong rounded-full px-4 py-2 flex items-center gap-2 text-xs whitespace-nowrap">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse" />
-                <span className="font-mono">Karachi · Available</span>
+                <span className="font-mono">Faisalabad · Available</span>
               </div>
             </Floaty>
 
-            {/* Orbiting functional icons */}
+            {/* Orbiting functional icons — single evenly spaced ring */}
             {mounted && orbitIcons.map((c, i) => {
-              const ring = i % 2 === 0 ? 0 : 1;
-              const perRing = Math.ceil(orbitIcons.length / 2);
-              const idxInRing = Math.floor(i / 2);
-              const radius = ring === 0 ? "min(240px, 44vw)" : "min(180px, 34vw)";
-              const duration = ring === 0 ? 38 : 30;
-              const dir = ring === 0 ? "" : " reverse";
-              const angleOffset = (idxInRing / perRing) * duration;
+              const duration = 42;
+              const angleOffset = (i / orbitIcons.length) * duration;
               return (
                 <div
                   key={c.label}
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                   style={{
-                    ["--r" as any]: radius,
-                    animation: `orbit ${duration}s linear infinite${dir}`,
+                    ["--r" as any]: "min(240px, 42vw)",
+                    animation: `orbit ${duration}s linear infinite`,
                     animationDelay: `-${angleOffset}s`,
                   }}
                 >
@@ -224,10 +219,10 @@ const Hero = () => {
                       target={c.href.startsWith("mailto:") ? undefined : "_blank"}
                       rel="noopener noreferrer"
                       aria-label={c.label}
-                      className="group relative flex items-center justify-center h-12 w-12 rounded-2xl glass glass-border-glow hover:scale-125 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_-10px_hsl(271_91%_60%/0.35)]"
+                      className="group relative flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 rounded-2xl glass glass-border-glow hover:scale-125 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_-10px_hsl(271_91%_60%/0.35)]"
                       style={{ color: c.color }}
                     >
-                      <c.icon size={20} />
+                      <c.icon size={18} />
                       <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-mono uppercase tracking-wider whitespace-nowrap glass rounded-full px-2 py-1 text-foreground">
                         {c.label}
                       </span>
