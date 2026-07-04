@@ -74,7 +74,7 @@ const Floaty: React.FC<React.PropsWithChildren<{ delay?: number; amount?: number
 
 /* ---------------- HERO with functional orbiting icons ---------------- */
 
-type Orb = { label: string; href: string; icon: React.ComponentType<{ size?: number }>; color: string };
+type Orb = { label: string; href: string; icon: React.ComponentType<any>; color: string };
 
 const orbitIcons: Orb[] = [
   { label: "GitHub",          href: "https://github.com/muhammadrehanahmed989-bit",                     icon: Github,    color: "#111827" },
