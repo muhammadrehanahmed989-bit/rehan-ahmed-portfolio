@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import {
   ArrowRight, ArrowUpRight, Sparkles, Cpu, Palette, Rocket, Github, Linkedin, Instagram, Youtube,
   Twitter, Mail, MapPin, Zap, Layers, Wand2, LineChart, MessageSquare, Brain, Code2, Figma,
-  Award, GraduationCap, Trophy, Calendar, ExternalLink, Star, Quote, Send, PhoneCall,
+  Award, GraduationCap, Trophy, ExternalLink, Star, Quote, Send, PhoneCall,
 } from "lucide-react";
 import portrait from "@/assets/portrait.jpg";
+import { Nav } from "@/components/Nav";
+import { Background } from "@/components/Background";
 
 /* ---------------- primitives ---------------- */
 
