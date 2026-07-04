@@ -514,7 +514,7 @@ const Contact = () => (
             muhammadrehanahmed989@gmail.com
           </a>
           <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin size={14} /> Karachi, Pakistan · Remote worldwide
+            <MapPin size={14} /> Faisalabad, Pakistan · Remote worldwide
           </div>
 
           <div className="mt-8 grid grid-cols-3 gap-3">
