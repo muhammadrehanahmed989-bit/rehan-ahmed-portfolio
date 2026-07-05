@@ -597,6 +597,151 @@ const Contact = () => (
   </Section>
 );
 
+/* ---------------- TESTIMONIALS ---------------- */
+
+const testimonials = [
+  {
+    name: "Sarah Mitchell",
+    role: "Founder, Nova Skincare",
+    country: "United States",
+    flag: "🇺🇸",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    quote:
+      "Rehan rebuilt our entire Meta Ads engine from scratch. Within 60 days our ROAS jumped from 1.9x to 4.6x. He treats your business like it's his own.",
+    rating: 5,
+  },
+  {
+    name: "Ahmed Al-Mansouri",
+    role: "CEO, Zayed Luxury Group",
+    country: "United Arab Emirates",
+    flag: "🇦🇪",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    quote:
+      "Truly a world-class operator. Rehan delivered a brand system and campaign strategy that finally matched the premium level of our stores in Dubai.",
+    rating: 5,
+  },
+  {
+    name: "James Carter",
+    role: "Marketing Director, Northline Co.",
+    country: "Canada",
+    flag: "🇨🇦",
+    avatar: "https://randomuser.me/api/portraits/men/54.jpg",
+    quote:
+      "Working with Rehan was the single biggest unlock for our growth this year. Strategic, creative, and disciplined about the numbers.",
+    rating: 5,
+  },
+  {
+    name: "Fatima Al-Zahra",
+    role: "Founder, Layali Boutique",
+    country: "United Arab Emirates",
+    flag: "🇦🇪",
+    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+    quote:
+      "He understood our brand voice from day one. The AI-driven creatives he built for us feel luxurious, and our engagement more than tripled.",
+    rating: 5,
+  },
+  {
+    name: "Emily Rodriguez",
+    role: "Head of Growth, Bloomkit",
+    country: "United States",
+    flag: "🇺🇸",
+    avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    quote:
+      "Rehan is genuinely one of the most professional people I've hired. Clean systems, sharp reporting, and creative that outperforms every benchmark.",
+    rating: 5,
+  },
+  {
+    name: "Oliver Bennett",
+    role: "Co-Founder, Atlas Menswear",
+    country: "United Kingdom",
+    flag: "🇬🇧",
+    avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+    quote:
+      "Our Google & Meta funnels were a mess. Rehan restructured everything and we scaled to seven figures cleanly, with a fraction of the wasted spend.",
+    rating: 5,
+  },
+  {
+    name: "Sophia Chen",
+    role: "Brand Lead, Halcyon Studio",
+    country: "Australia",
+    flag: "🇦🇺",
+    avatar: "https://randomuser.me/api/portraits/women/24.jpg",
+    quote:
+      "Rare combo of designer, marketer, and strategist. Rehan helped us relaunch with a premium identity that finally reflects who we are.",
+    rating: 5,
+  },
+  {
+    name: "Mohammed Rashid",
+    role: "Owner, Rashid Motors",
+    country: "Saudi Arabia",
+    flag: "🇸🇦",
+    avatar: "https://randomuser.me/api/portraits/men/76.jpg",
+    quote:
+      "Extremely professional and reliable. He grew our showroom's inbound leads by over 300% in just three months. Highly recommended.",
+    rating: 5,
+  },
+  {
+    name: "Isabella Rossi",
+    role: "Creative Director, Casa Rossi",
+    country: "Italy",
+    flag: "🇮🇹",
+    avatar: "https://randomuser.me/api/portraits/women/90.jpg",
+    quote:
+      "Cinematic thinking with real business results. Rehan is the person you call when you want your brand to look and perform like a global label.",
+    rating: 5,
+  },
+];
+
+const Testimonials = () => (
+  <Section
+    id="testimonials"
+    eyebrow="Social Feedback"
+    title={<>Trusted by founders <span className="gradient-text">around the world.</span></>}
+    kicker="A glimpse of what clients across the US, UAE, Canada, UK and beyond say about working with me."
+  >
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {testimonials.map((t, i) => (
+        <motion.div
+          key={t.name}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ ...spring, delay: (i % 3) * 0.08 }}
+        >
+          <Floaty amount={5} duration={6 + (i % 4)} delay={i * 0.2}>
+            <div className="glass glass-border-glow rounded-[32px] p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-500">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="relative">
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    loading="lazy"
+                    className="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-[0_8px_24px_-8px_hsl(271_91%_60%/0.35)]"
+                  />
+                  <span className="absolute -bottom-1 -right-1 text-base leading-none">{t.flag}</span>
+                </div>
+                <div className="min-w-0">
+                  <div className="font-display font-semibold text-base leading-tight text-foreground truncate">{t.name}</div>
+                  <div className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground truncate">{t.role}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-0.5 mb-3">
+                {Array.from({ length: t.rating }).map((_, s) => (
+                  <span key={s} className="text-amber-400 text-sm">★</span>
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed flex-1">"{t.quote}"</p>
+              <div className="mt-5 pt-4 border-t border-border/60 flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+                <MapPin size={12} className="text-primary" /> {t.country}
+              </div>
+            </div>
+          </Floaty>
+        </motion.div>
+      ))}
+    </div>
+  </Section>
+);
+
 /* ---------------- FOOTER ---------------- */
 
 const Footer = () => (
@@ -626,6 +771,7 @@ const Index = () => (
       <Skills />
       <Journey />
       <Work />
+      <Testimonials />
       <Contact />
     </main>
     <Footer />
@@ -633,3 +779,4 @@ const Index = () => (
 );
 
 export default Index;
+
