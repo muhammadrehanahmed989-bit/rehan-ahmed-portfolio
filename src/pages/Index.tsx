@@ -6,7 +6,7 @@ import {
   Award, GraduationCap, Trophy, ExternalLink, Send, GraduationCap as MSIcon,
   BarChart3, Target, Bot, Workflow, Tag, PieChart,
 } from "lucide-react";
-import portrait from "@/assets/portrait.jpg";
+import portraitAsset from "@/assets/portrait.png.asset.json";
 import { Nav } from "@/components/Nav";
 import { Background } from "@/components/Background";
 import { MouseSpotlight } from "@/components/MouseSpotlight";
@@ -102,8 +102,9 @@ const Hero = () => {
                 <span className="relative flex items-center justify-center h-6 w-6 rounded-full gradient-brand text-white">
                   <Sparkles size={12} />
                 </span>
-                Available for premium projects · 2026
+                Crafting Signature Digital Experiences
               </div>
+
             </motion.div>
 
             <motion.h1
@@ -181,7 +182,7 @@ const Hero = () => {
             <Floaty amount={10} duration={8} className="absolute inset-[18%]">
               <div className="relative h-full w-full rounded-full overflow-hidden glass-strong glass-border-glow shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.5)]">
                 <img
-                  src={portrait}
+                  src={portraitAsset.url}
                   alt="Portrait of Muhammad Rehan Ahmed"
                   width={832}
                   height={1024}
@@ -191,13 +192,6 @@ const Hero = () => {
               </div>
             </Floaty>
 
-            {/* Status pill */}
-            <Floaty amount={6} duration={5} className="absolute bottom-[4%] left-1/2 -translate-x-1/2 z-10">
-              <div className="glass-strong rounded-full px-4 py-2 flex items-center gap-2 text-xs whitespace-nowrap">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse" />
-                <span className="font-mono">Faisalabad · Available</span>
-              </div>
-            </Floaty>
 
             {/* Orbiting functional icons — single evenly spaced ring */}
             {mounted && orbitIcons.map((c, i) => {
