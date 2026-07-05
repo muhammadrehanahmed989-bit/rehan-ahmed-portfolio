@@ -554,93 +554,161 @@ const Work = () => (
 
 /* ---------------- CONTACT ---------------- */
 
-const Contact = () => (
-  <Section
-    id="contact"
-    eyebrow="Contact"
-    title={<>Let's build something <span className="gradient-text">unforgettable.</span></>}
-    kicker="Meta Ads systems, AI-driven creative, luxury brand builds — pick a lane, or bring your own vision."
-  >
-    <div className="grid lg:grid-cols-[1fr_1.2fr] gap-8">
-      <Floaty amount={6} duration={7}>
-        <div className="glass glass-border-glow rounded-[36px] p-8 h-full">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-12 w-12 rounded-2xl gradient-brand flex items-center justify-center text-white shadow-[0_15px_40px_-10px_hsl(271_91%_60%/0.6)]">
-              <Mail size={20} />
-            </div>
-            <div>
-              <div className="font-display text-lg font-semibold">Direct line</div>
-              <div className="text-sm text-muted-foreground">Fastest reply within 24 hours</div>
-            </div>
-          </div>
-          <a href="mailto:muhammadrehanahmed989@gmail.com" className="block font-display text-lg gradient-text break-all hover:underline underline-offset-4">
-            muhammadrehanahmed989@gmail.com
-          </a>
-          <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin size={14} /> Faisalabad, Pakistan · Remote worldwide
-          </div>
+// Messages submitted here are delivered directly to Rehan's Gmail inbox via
+// FormSubmit's AJAX endpoint — no backend, no API key required. First-ever
+// submission triggers a one-time email confirmation from FormSubmit.
+const CONTACT_EMAIL = "muhammadrehanahmed989@gmail.com";
+const FORMSUBMIT_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
-          <div className="mt-8 grid grid-cols-3 gap-3">
-            {[
-              { href: "https://github.com/muhammadrehanahmed989-bit", icon: Github, label: "GitHub" },
-              { href: "https://learn.microsoft.com/en-gb/users/rehanahmad-1241/", icon: MSIcon, label: "MS Learn" },
-              { href: "https://www.linkedin.com/", icon: Linkedin, label: "LinkedIn" },
-              { href: "https://www.instagram.com/", icon: Instagram, label: "Instagram" },
-              { href: "https://www.figma.com/", icon: Figma, label: "Figma" },
-              { href: "mailto:muhammadrehanahmed989@gmail.com", icon: Mail, label: "Email" },
-            ].map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target={s.href.startsWith("mailto:") ? undefined : "_blank"}
-                rel="noopener noreferrer"
-                className="glass rounded-2xl p-3 flex flex-col items-center gap-1.5 hover:-translate-y-1 transition-transform"
-              >
-                <s.icon size={18} />
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </Floaty>
+const Contact = () => {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-      <Floaty amount={6} duration={8} delay={0.3}>
-        <form
-          onSubmit={(e) => { e.preventDefault(); window.location.href = "mailto:muhammadrehanahmed989@gmail.com"; }}
-          className="glass glass-border-glow rounded-[36px] p-8 space-y-4"
-        >
-          <div className="grid sm:grid-cols-2 gap-4">
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const project = String(data.get("project") || "").trim();
+    const message = String(data.get("message") || "").trim();
+
+    if (!name || !email || !message) {
+      toast({ title: "Missing fields", description: "Please fill in your name, email and message.", variant: "destructive" });
+      return;
+    }
+
+    setSending(true);
+    try {
+      const res = await fetch(FORMSUBMIT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          project,
+          message,
+          _subject: `New project inquiry from ${name} — ${project}`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && (json.success === "true" || json.success === true)) {
+        setSent(true);
+        form.reset();
+        toast({ title: "Message sent ✨", description: "Your message just landed in Rehan's Gmail. Expect a reply within 24 hours." });
+      } else {
+        throw new Error(json.message || "Something went wrong");
+      }
+    } catch (err: any) {
+      toast({
+        title: "Couldn't send message",
+        description: `${err?.message || "Please try again"} — or email ${CONTACT_EMAIL} directly.`,
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <Section
+      id="contact"
+      eyebrow="Contact"
+      title={<>Let's build something <span className="gradient-text">unforgettable.</span></>}
+      kicker="Meta Ads systems, AI-driven creative, luxury brand builds — pick a lane, or bring your own vision."
+    >
+      <div className="grid lg:grid-cols-[1fr_1.2fr] gap-8">
+        <Floaty amount={6} duration={7}>
+          <div className="glass glass-border-glow rounded-[36px] p-8 h-full">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-12 w-12 rounded-2xl gradient-brand flex items-center justify-center text-white shadow-[0_15px_40px_-10px_hsl(271_91%_60%/0.6)]">
+                <Mail size={20} />
+              </div>
+              <div>
+                <div className="font-display text-lg font-semibold">Direct line</div>
+                <div className="text-sm text-muted-foreground">Fastest reply within 24 hours</div>
+              </div>
+            </div>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="block font-display text-lg gradient-text break-all hover:underline underline-offset-4">
+              {CONTACT_EMAIL}
+            </a>
+            <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin size={14} /> Faisalabad, Pakistan · Remote worldwide
+            </div>
+
+            <div className="mt-8 grid grid-cols-3 gap-3">
+              {[
+                { href: "https://github.com/muhammadrehanahmed989-bit", icon: Github, label: "GitHub" },
+                { href: "https://learn.microsoft.com/en-gb/users/rehanahmad-1241/", icon: MSIcon, label: "MS Learn" },
+                { href: "https://www.linkedin.com/", icon: Linkedin, label: "LinkedIn" },
+                { href: "https://www.instagram.com/", icon: Instagram, label: "Instagram" },
+                { href: "https://www.figma.com/", icon: Figma, label: "Figma" },
+                { href: `mailto:${CONTACT_EMAIL}`, icon: Mail, label: "Email" },
+              ].map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target={s.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  className="glass rounded-2xl p-3 flex flex-col items-center gap-1.5 hover:-translate-y-1 transition-transform"
+                >
+                  <s.icon size={18} />
+                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </Floaty>
+
+        <Floaty amount={6} duration={8} delay={0.3}>
+          <form onSubmit={handleSubmit} className="glass glass-border-glow rounded-[36px] p-8 space-y-4">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <label className="block">
+                <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Name</span>
+                <input name="name" required maxLength={100} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Your name" />
+              </label>
+              <label className="block">
+                <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Email</span>
+                <input name="email" required type="email" maxLength={255} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="you@brand.com" />
+              </label>
+            </div>
             <label className="block">
-              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Name</span>
-              <input required className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Your name" />
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Project</span>
+              <select name="project" defaultValue="Meta Ads system" className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40">
+                <option>Meta Ads system</option>
+                <option>Google Ads system</option>
+                <option>AI creative pipeline</option>
+                <option>UI/UX & web build</option>
+                <option>Brand strategy</option>
+              </select>
             </label>
             <label className="block">
-              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Email</span>
-              <input required type="email" className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="you@brand.com" />
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Vision</span>
+              <textarea name="message" required rows={5} maxLength={4000} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40 resize-none" placeholder="Tell me about the brand, goals & timeline…" />
             </label>
-          </div>
-          <label className="block">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Project</span>
-            <select className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40">
-              <option>Meta Ads system</option>
-              <option>Google Ads system</option>
-              <option>AI creative pipeline</option>
-              <option>UI/UX & web build</option>
-              <option>Brand strategy</option>
-            </select>
-          </label>
-          <label className="block">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Vision</span>
-            <textarea required rows={5} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40 resize-none" placeholder="Tell me about the brand, goals & timeline…" />
-          </label>
-          <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-full gradient-brand px-6 py-4 text-sm font-medium text-white magnetic-btn shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.6)]">
-            Send message <Send size={16} />
-          </button>
-        </form>
-      </Floaty>
-    </div>
-  </Section>
-);
+            {/* Honeypot anti-spam field (kept invisible) */}
+            <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+            <button
+              type="submit"
+              disabled={sending}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full gradient-brand px-6 py-4 text-sm font-medium text-white magnetic-btn shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.6)] disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {sending ? (<><Loader2 size={16} className="animate-spin" /> Sending…</>)
+                : sent ? (<><CheckCircle2 size={16} /> Sent — send another</>)
+                : (<>Send message <Send size={16} /></>)}
+            </button>
+            <p className="text-[11px] text-muted-foreground text-center">
+              Delivered straight to Rehan's Gmail inbox — no third-party storage.
+            </p>
+          </form>
+        </Floaty>
+      </div>
+    </Section>
+  );
+};
 
 /* ---------------- TESTIMONIALS ---------------- */
 
