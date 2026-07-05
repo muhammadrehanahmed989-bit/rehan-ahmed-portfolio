@@ -1,0 +1,185 @@
+========================================================================
+ MUHAMMAD REHAN AHMED — PORTFOLIO · CODE MAP (index.txt)
+========================================================================
+Purpose of this file:
+  A plain-English reference that explains what every important piece of
+  code in this project does. Use it as a table of contents whenever you
+  open the codebase.
+
+------------------------------------------------------------------------
+ 1. PROJECT STACK
+------------------------------------------------------------------------
+  React 18 + TypeScript + Vite         → the app framework & build tool
+  Tailwind CSS v3                      → all styling (utility classes)
+  Framer Motion                        → entrance + floating animations
+  lucide-react                         → icon set used across the site
+  shadcn/ui + Radix                    → base UI primitives (toasts, etc.)
+  React Router                         → page routing
+  TanStack Query                       → data-fetching setup (ready)
+
+------------------------------------------------------------------------
+ 2. TOP-LEVEL FILES
+------------------------------------------------------------------------
+  index.html
+      → HTML shell. Contains SEO <title>, <meta description>,
+        Open Graph / Twitter tags, and Google Fonts (Fraunces,
+        Cormorant Garamond, Inter, JetBrains Mono).
+
+  src/main.tsx
+      → App bootstrap. Mounts <App /> into #root.
+
+  src/App.tsx
+      → Wires global providers: React Query, Tooltip, Toaster,
+        Sonner + BrowserRouter with routes ("/" → Index page,
+        "*" → NotFound page).
+
+  src/index.css
+      → Design system. Defines all CSS custom properties (colors,
+        gradients, shadows), aurora backgrounds, glass utilities
+        (.glass / .glass-strong / .glass-border-glow), animations
+        (float, orbit, ring-spin, glow-pulse, shimmer), and helper
+        utilities (.gradient-text, .font-display, etc).
+
+  tailwind.config.ts
+      → Extends Tailwind with the semantic tokens from index.css
+        so classes like bg-primary, text-foreground, bg-cyan work.
+
+------------------------------------------------------------------------
+ 3. COMPONENTS  (src/components/)
+------------------------------------------------------------------------
+  Nav.tsx
+      → Fixed top navigation with anchor links (Home, About,
+        Skills, Journey, Work, Testimonials, Contact) and the
+        primary "Start a project" CTA.
+
+  Background.tsx
+      → Aurora/blob background layers rendered behind every page.
+
+  MouseSpotlight.tsx
+      → Soft radial light that follows the cursor for depth.
+
+  NavLink.tsx
+      → Small styled anchor helper used by Nav.
+
+  ui/*
+      → shadcn/ui components (toast, tooltip, sonner, etc.).
+
+------------------------------------------------------------------------
+ 4. PAGES  (src/pages/)
+------------------------------------------------------------------------
+  Index.tsx  → the entire one-page portfolio. Composed of these
+               sections, in order:
+
+    Hero          → Name, tagline, CTA buttons, live stats,
+                    portrait with orbiting social/tool icons.
+    About         → Bio + revolving pillar diagram (Growth /
+                    Design / AI / Build cards orbit around
+                    "Rehan Ahmed" center).
+    Skills        → Bento grid of skills with animated
+                    progress bars.
+    Journey       → Timeline of career milestones (2019 → 2026).
+    Work          → 8 signature project cards. Each card shows
+                    a real image OR autoplaying video preview
+                    (see section 6 below).
+    Testimonials  → 9 client reviews with country flags & avatars.
+    Contact       → Direct-line card + fully functional Gmail
+                    contact form (see section 7 below).
+    Footer        → Small brand footer with © line.
+
+  NotFound.tsx   → 404 page for unknown routes.
+
+------------------------------------------------------------------------
+ 5. ASSETS  (src/assets/)
+------------------------------------------------------------------------
+  Binary files are NOT stored in the repo. They live on Lovable's
+  CDN and are referenced via small ".asset.json" pointer files.
+
+  portrait.png.asset.json
+      → Rehan's hero portrait photo.
+
+  work/  (project media used in the Work section)
+      noor-apparel.png.asset.json        Noor Apparel — luxury DTC brand
+      bloom-cafe.png.asset.json          Bloom Café  — social content system
+      pulse-analytics.png.asset.json     Pulse Analytics — SaaS dashboard
+      halo-studio.png.asset.json         Halo Studio — creative branding
+      vertex-fitness.png.asset.json      Vertex Fitness — performance web hero
+      lumen-coffee.mp4.asset.json        Lumen Coffee — motion ad (video)
+      aurora.mp4.asset.json              Aurora AI  — product film (video)
+      nimbus-ai.mp4.asset.json           Nimbus AI  — brand motion (video)
+
+------------------------------------------------------------------------
+ 6. HOW THE WORK SECTION RENDERS MEDIA
+------------------------------------------------------------------------
+  Inside src/pages/Index.tsx there is a `projects` array. Each
+  project entry has:
+      title  → project name shown on the card
+      tag    → small label at the top-left of the media
+      desc   → one-line description under the title
+      color  → accent glow color for the card
+      media  → CDN URL from the imported .asset.json
+      type   → "image" or "video"
+
+  The Work component maps this array to cards. If type is
+  "image" it renders <img>; if "video" it renders <video>
+  with autoPlay + muted + loop + playsInline (so it silently
+  plays on all devices, including mobile).
+
+------------------------------------------------------------------------
+ 7. CONTACT FORM  → DELIVERED TO GMAIL
+------------------------------------------------------------------------
+  The contact form (Contact component in src/pages/Index.tsx) is
+  fully functional and delivers every submission straight to:
+
+      muhammadrehanahmed989@gmail.com
+
+  HOW IT WORKS:
+    • On submit, the form POSTs a JSON payload (name, email,
+      project, message) to FormSubmit's AJAX endpoint:
+          https://formsubmit.co/ajax/muhammadrehanahmed989@gmail.com
+    • FormSubmit forwards the payload as a nicely formatted
+      email to Rehan's Gmail inbox.
+    • No backend, no API keys, no database — 100% serverless.
+    • A hidden "_honey" honeypot field blocks bots.
+    • On success a toast shows "Message sent ✨".
+    • On failure a toast asks the user to email directly.
+
+  FIRST-TIME ACTIVATION (one-time):
+    The very first time the form is submitted, FormSubmit sends
+    Rehan a confirmation email. He must click the link inside
+    once — after that, all future submissions arrive automatically
+    in his Gmail inbox with no further setup.
+
+------------------------------------------------------------------------
+ 8. STYLING CONVENTIONS
+------------------------------------------------------------------------
+  • Never use raw color classes like text-white or bg-black —
+    always use semantic tokens (text-foreground, bg-primary, etc).
+  • Glass surfaces: apply `glass` or `glass-strong` +
+    `glass-border-glow` for the animated gradient border.
+  • Headings use the `font-display` class (Fraunces serif).
+  • Body text uses Inter (default).
+  • Monospace labels use `font-mono` (JetBrains Mono).
+  • Animations:
+        Floaty component  → subtle idle up/down floating
+        animate-glow-pulse→ pulsing brand glow
+        orbit CSS keyframe→ circular revolving motion
+        ring-spin(-rev)   → slow rotating rings
+
+------------------------------------------------------------------------
+ 9. QUICK EDIT CHEAT-SHEET
+------------------------------------------------------------------------
+  Change hero name / tagline .......... src/pages/Index.tsx  (Hero)
+  Change stats (6+, 80+, $4M+) ........ src/pages/Index.tsx  (Hero)
+  Edit About paragraphs ............... src/pages/Index.tsx  (About)
+  Add / edit skills ................... `skills` array in Index.tsx
+  Add / edit journey milestones ....... `journey` array in Index.tsx
+  Add / edit portfolio projects ....... `projects` array in Index.tsx
+  Add / edit testimonials ............. `testimonials` array in Index.tsx
+  Change contact email destination .... CONTACT_EMAIL const in Contact
+  Change brand colors / gradients ..... src/index.css  (:root section)
+  Change fonts ........................ index.html <link> + index.css
+  Update SEO title/description ........ index.html <head>
+
+========================================================================
+ END OF FILE
+========================================================================
