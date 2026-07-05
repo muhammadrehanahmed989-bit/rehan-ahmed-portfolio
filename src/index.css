@@ -11,22 +11,23 @@
 
 
     --card: 0 0% 100%;
-    --card-foreground: 224 40% 12%;
+    --card-foreground: 250 30% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 40% 12%;
+    --popover-foreground: 250 30% 18%;
 
     --primary: 258 90% 66%;              /* violet 500 */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 199 89% 60%;            /* sky */
-    --secondary-foreground: 224 40% 12%;
+    --secondary-foreground: 250 30% 18%;
 
-    --muted: 220 20% 96%;
-    --muted-foreground: 220 15% 42%;
+    --muted: 250 30% 96%;
+    --muted-foreground: 245 18% 46%;     /* indigo-tinted muted */
 
     --accent: 187 85% 53%;               /* cyan */
-    --accent-foreground: 224 40% 12%;
+    --accent-foreground: 250 30% 18%;
+
 
     --pink: 330 84% 66%;
     --purple: 271 91% 70%;
