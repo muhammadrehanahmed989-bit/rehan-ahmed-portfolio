@@ -35,10 +35,11 @@ export default {
         sm: "calc(var(--radius) - 16px)",
       },
       fontFamily: {
-        display: ['"Space Grotesk"', "Inter", "sans-serif"],
+        display: ['"Fraunces"', '"Cormorant Garamond"', "ui-serif", "Georgia", "serif"],
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
       },
+
       backgroundImage: {
         "gradient-brand": "var(--gradient-brand)",
         "gradient-soft": "var(--gradient-soft)",
