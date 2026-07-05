@@ -4,12 +4,21 @@ import {
   ArrowRight, ArrowUpRight, Sparkles, Cpu, Palette, Rocket, Github, Linkedin, Instagram,
   Mail, MapPin, Zap, Layers, Wand2, LineChart, MessageSquare, Brain, Code2, Figma,
   Award, GraduationCap, Trophy, ExternalLink, Send, GraduationCap as MSIcon,
-  BarChart3, Target, Bot, Workflow, Tag, PieChart,
+  BarChart3, Target, Bot, Workflow, Tag, PieChart, Loader2, CheckCircle2,
 } from "lucide-react";
 import portraitAsset from "@/assets/portrait.png.asset.json";
+import noorAsset from "@/assets/work/noor-apparel.png.asset.json";
+import bloomAsset from "@/assets/work/bloom-cafe.png.asset.json";
+import pulseAsset from "@/assets/work/pulse-analytics.png.asset.json";
+import haloAsset from "@/assets/work/halo-studio.png.asset.json";
+import vertexAsset from "@/assets/work/vertex-fitness.png.asset.json";
+import lumenAsset from "@/assets/work/lumen-coffee.mp4.asset.json";
+import auroraAsset from "@/assets/work/aurora.mp4.asset.json";
+import nimbusAsset from "@/assets/work/nimbus-ai.mp4.asset.json";
 import { Nav } from "@/components/Nav";
 import { Background } from "@/components/Background";
 import { MouseSpotlight } from "@/components/MouseSpotlight";
+import { toast } from "@/hooks/use-toast";
 
 /* ---------------- primitives ---------------- */
 
