@@ -272,79 +272,78 @@ const About = () => (
         </div>
       </div>
 
-      {/* Mobile / tablet: clean grid layout */}
-      <div className="grid grid-cols-2 gap-4 md:hidden">
-        {pillars.map((p, i) => (
-          <motion.div
-            key={p.label}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ ...spring, delay: i * 0.08 }}
-          >
-            <Floaty amount={5} duration={6 + i} delay={i * 0.3}>
-              <div className="glass glass-border-glow rounded-3xl p-4 h-full">
-                <div className="h-10 w-10 rounded-2xl flex items-center justify-center mb-3"
-                  style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
-                  <p.icon size={18} />
-                </div>
-                <div className="font-display font-semibold text-sm">{p.label}</div>
-                <div className="text-[11px] text-muted-foreground mt-1 leading-snug">{p.desc}</div>
-              </div>
-            </Floaty>
-          </motion.div>
-        ))}
-      </div>
+      {/* Revolving pillars — one layout, responsive */}
+      <div className="relative aspect-square w-full max-w-[520px] mx-auto">
+        {/* Aurora glow */}
+        <div className="absolute inset-6 rounded-full bg-purple/20 blur-3xl animate-glow-pulse" />
+        <div className="absolute inset-16 rounded-full bg-cyan/15 blur-3xl" />
 
-      {/* Desktop: radial diagram */}
-      <div className="relative aspect-square max-w-[520px] mx-auto w-full hidden md:block">
+        {/* Rotating rings */}
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={spring}
+          initial={{ opacity: 0, scale: 0.7 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ ...spring, delay: 0.1 }}
           className="absolute inset-0"
         >
-          <div className="absolute inset-8 rounded-full border border-purple/20 animate-ring-spin" />
-          <div className="absolute inset-20 rounded-full border border-sky/20 animate-ring-spin-rev" />
-          <Floaty className="absolute inset-0 flex items-center justify-center">
-            <div className="glass-strong glass-border-glow rounded-full h-32 w-32 flex flex-col items-center justify-center animate-glow-pulse">
-              <span className="font-display text-2xl gradient-text">R.A</span>
-              <span className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Operator</span>
+          <div className="absolute inset-4 sm:inset-8 rounded-full border border-purple/25 animate-ring-spin" />
+          <div className="absolute inset-14 sm:inset-20 rounded-full border border-sky/25 animate-ring-spin-rev" />
+          <div className="absolute inset-24 sm:inset-32 rounded-full border border-pink/20 animate-ring-spin" style={{ animationDuration: "60s" }} />
+        </motion.div>
+
+        {/* Center — Rehan Ahmed */}
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ ...spring, delay: 0.15 }}
+          className="absolute inset-0 flex items-center justify-center z-10"
+        >
+          <Floaty>
+            <div className="glass-strong glass-border-glow rounded-full h-28 w-28 sm:h-36 sm:w-36 flex flex-col items-center justify-center animate-glow-pulse">
+              <span className="font-display text-xl sm:text-2xl gradient-text font-semibold">Rehan</span>
+              <span className="font-display text-sm sm:text-base text-foreground/80 -mt-0.5">Ahmed</span>
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Operator</span>
             </div>
           </Floaty>
+        </motion.div>
 
-          {pillars.map((p, i) => {
-            const pos = [
-              "top-0 left-1/2 -translate-x-1/2",
-              "right-0 top-1/2 -translate-y-1/2",
-              "bottom-0 left-1/2 -translate-x-1/2",
-              "left-0 top-1/2 -translate-y-1/2",
-            ][i];
-            return (
+        {/* Revolving pillar cards */}
+        {pillars.map((p, i) => {
+          const duration = 34;
+          const angleOffset = (i / pillars.length) * duration;
+          return (
+            <div
+              key={p.label}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{
+                ["--r" as any]: "min(180px, 34vw)",
+                animation: `orbit ${duration}s linear infinite`,
+                animationDelay: `-${angleOffset}s`,
+              }}
+            >
               <motion.div
-                key={p.label}
-                initial={{ opacity: 0, scale: 0.6 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ ...spring, delay: 0.15 + i * 0.08 }}
-                className={`absolute ${pos}`}
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ ...spring, delay: 0.4 + i * 0.15 }}
               >
-                <Floaty amount={6} duration={6 + i} delay={i * 0.4}>
-                  <div className="glass rounded-3xl p-4 w-40 text-center hover:-translate-y-1 transition-transform">
-                    <div className="mx-auto h-10 w-10 rounded-2xl flex items-center justify-center mb-2"
+                <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.25}>
+                  <div className="glass glass-border-glow rounded-3xl p-3 sm:p-4 w-28 sm:w-36 text-center hover:-translate-y-1 transition-transform">
+                    <div className="mx-auto h-9 w-9 sm:h-10 sm:w-10 rounded-2xl flex items-center justify-center mb-1.5 sm:mb-2"
                       style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
                       <p.icon size={18} />
                     </div>
-                    <div className="font-display font-semibold text-sm">{p.label}</div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5">{p.desc}</div>
+                    <div className="font-display font-semibold text-xs sm:text-sm text-foreground">{p.label}</div>
+                    <div className="hidden sm:block text-[11px] text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
                   </div>
                 </Floaty>
               </motion.div>
-            );
-          })}
-        </motion.div>
+            </div>
+          );
+        })}
       </div>
+
     </div>
   </Section>
 );
