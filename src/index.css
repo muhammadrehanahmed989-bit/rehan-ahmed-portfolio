@@ -77,8 +77,9 @@
 }
 
 @layer utilities {
-  .font-display { font-family: 'Space Grotesk', 'Inter', sans-serif; letter-spacing: -0.025em; }
+  .font-display { font-family: 'Fraunces', 'Cormorant Garamond', ui-serif, Georgia, serif; letter-spacing: -0.02em; font-optical-sizing: auto; }
   .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
 
   .gradient-text {
     background: var(--gradient-text);
