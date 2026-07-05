@@ -462,13 +462,24 @@ const Journey = () => (
 
 /* ---------------- WORK ---------------- */
 
-const projects = [
-  { title: "Noor Apparel",    tag: "Meta Ads · Brand",   desc: "7-figure DTC campaign system with cinematic creative direction.", color: "#8B5CF6" },
-  { title: "Aurora AI",       tag: "AI · Product",       desc: "Generative brand pipeline turning prompts into launch-ready assets.", color: "#22D3EE" },
-  { title: "Lumen Studio",    tag: "UI/UX · Web",        desc: "Luxury studio site with glassmorphic system & smooth motion.", color: "#EC4899" },
-  { title: "Vector Labs",     tag: "Automation",         desc: "End-to-end ad ops automation across Meta & Google.", color: "#60A5FA" },
-  { title: "Halo Cosmetics",  tag: "Google Ads · CRO",   desc: "Full-funnel search + shopping strategy with 4.8x ROAS.", color: "#F9A8D4" },
-  { title: "Nova Financial",  tag: "Brand · Web",        desc: "Trust-first fintech identity with premium interaction design.", color: "#38BDF8" },
+type Project = {
+  title: string;
+  tag: string;
+  desc: string;
+  color: string;
+  media: string;
+  type: "image" | "video";
+};
+
+const projects: Project[] = [
+  { title: "Noor Apparel",     tag: "Meta Ads · Luxury DTC",       desc: "Full brand & campaign system — cinematic creatives, 4.6x blended ROAS.",         color: "#A78BFA", media: noorAsset.url,   type: "image" },
+  { title: "Bloom Café",       tag: "Social · Content System",     desc: "Monthly content engine that grew followers 32% and engagement 48% in 90 days.", color: "#34D399", media: bloomAsset.url,  type: "image" },
+  { title: "Pulse Analytics",  tag: "SaaS · Dashboard UI",         desc: "Analytics platform brand + product UI for campaign performance intelligence.",   color: "#F472B6", media: pulseAsset.url,  type: "image" },
+  { title: "Halo Studio",      tag: "Branding · Identity",         desc: "Creative branding agency identity — strategy, typography, packaging, guidelines.", color: "#8B5CF6", media: haloAsset.url,   type: "image" },
+  { title: "Vertex Fitness",   tag: "Performance · Web Hero",      desc: "High-conversion fitness landing with cinematic hero and premium product storytelling.", color: "#22D3EE", media: vertexAsset.url, type: "image" },
+  { title: "Lumen Coffee",     tag: "Motion · Ad Creative",        desc: "Signature motion ad for a specialty coffee house — engineered for scroll-stop.", color: "#F59E0B", media: lumenAsset.url,  type: "video" },
+  { title: "Aurora AI",        tag: "AI · Product Film",           desc: "Generative product film for an AI creative pipeline launch.",                     color: "#60A5FA", media: auroraAsset.url, type: "video" },
+  { title: "Nimbus AI",        tag: "AI · Brand Motion",           desc: "Brand motion piece for a cloud-native AI platform reveal.",                       color: "#EC4899", media: nimbusAsset.url, type: "video" },
 ];
 
 const Work = () => (
@@ -476,12 +487,12 @@ const Work = () => (
     id="work"
     eyebrow="Work"
     title={<>Selected <span className="gradient-text">signature</span> projects.</>}
+    kicker="Real brands, real launches — each one engineered where luxury design meets measurable performance."
   >
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {projects.map((p, i) => (
-        <motion.a
+        <motion.div
           key={p.title}
-          href="#contact"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
@@ -489,17 +500,42 @@ const Work = () => (
           className="group relative"
         >
           <Floaty amount={5} duration={7 + (i % 3)} delay={i * 0.25}>
-            <div className="glass glass-border-glow rounded-[32px] p-6 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.4)]">
-              <div className="aspect-[16/10] rounded-3xl overflow-hidden relative mb-5"
-                style={{ background: `linear-gradient(135deg, ${p.color}33, #22D3EE33, #EC489933)` }}>
-                <div className="absolute inset-0 grid-overlay opacity-40" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="glass-strong rounded-2xl px-4 py-2 font-display text-sm">{p.tag}</div>
+            <a
+              href="#contact"
+              className="block glass glass-border-glow rounded-[32px] p-4 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.4)]"
+            >
+              <div
+                className="aspect-[16/10] rounded-3xl overflow-hidden relative mb-5 ring-1 ring-white/60"
+                style={{ background: `linear-gradient(135deg, ${p.color}22, #22D3EE22)` }}
+              >
+                {p.type === "image" ? (
+                  <img
+                    src={p.media}
+                    alt={p.title}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <video
+                    src={p.media}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute top-3 left-3">
+                  <div className="glass-strong rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest">{p.tag}</div>
                 </div>
-                <div className="absolute -inset-10 rounded-full blur-3xl opacity-40"
-                  style={{ background: p.color }} />
+                <div
+                  className="absolute -inset-10 rounded-full blur-3xl opacity-30 pointer-events-none"
+                  style={{ background: p.color }}
+                />
               </div>
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start justify-between gap-3 px-2 pb-2">
                 <div>
                   <div className="font-display text-xl font-semibold">{p.title}</div>
                   <div className="text-sm text-muted-foreground mt-1">{p.desc}</div>
@@ -508,9 +544,9 @@ const Work = () => (
                   <ArrowUpRight size={16} />
                 </div>
               </div>
-            </div>
+            </a>
           </Floaty>
-        </motion.a>
+        </motion.div>
       ))}
     </div>
   </Section>
