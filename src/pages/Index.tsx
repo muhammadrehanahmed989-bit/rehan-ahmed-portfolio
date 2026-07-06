@@ -1,10 +1,10 @@
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence, type Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
   ArrowRight, ArrowUpRight, Sparkles, Cpu, Palette, Rocket, Github, Linkedin, Instagram,
   Mail, MapPin, Zap, Layers, Wand2, LineChart, MessageSquare, Brain, Code2, Figma,
   Award, GraduationCap, Trophy, ExternalLink, Send, GraduationCap as MSIcon,
-  BarChart3, Target, Bot, Workflow, Tag, PieChart, Loader2, CheckCircle2,
+  BarChart3, Target, Bot, Workflow, Tag, PieChart, Loader2, CheckCircle2, X,
 } from "lucide-react";
 import portraitAsset from "@/assets/portrait.png.asset.json";
 import noorAsset from "@/assets/work/noor-apparel.png.asset.json";
@@ -15,6 +15,10 @@ import vertexAsset from "@/assets/work/vertex-fitness.png.asset.json";
 import lumenAsset from "@/assets/work/lumen-coffee.mp4.asset.json";
 import auroraAsset from "@/assets/work/aurora.mp4.asset.json";
 import nimbusAsset from "@/assets/work/nimbus-ai.mp4.asset.json";
+import aiCertAsset from "@/assets/certs/ai-fundamentals.png.asset.json";
+import gdCertAsset from "@/assets/certs/graphic-design.png.asset.json";
+import saylaniCertAsset from "@/assets/certs/saylani-digital-marketing.png.asset.json";
+import hubspotCertAsset from "@/assets/certs/hubspot-social-media.png.asset.json";
 import { Nav } from "@/components/Nav";
 import { Background } from "@/components/Background";
 import { MouseSpotlight } from "@/components/MouseSpotlight";
