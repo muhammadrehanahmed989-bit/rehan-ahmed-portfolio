@@ -100,10 +100,6 @@ Purpose of this file:
     Contact       → Direct-line card + fully functional Gmail
                     contact form (see section 7 below).
     Footer        → Small brand footer with © line.
-    Testimonials  → 9 client reviews with country flags & avatars.
-    Contact       → Direct-line card + fully functional Gmail
-                    contact form (see section 7 below).
-    Footer        → Small brand footer with © line.
 
   NotFound.tsx   → 404 page for unknown routes.
 
@@ -125,6 +121,12 @@ Purpose of this file:
       lumen-coffee.mp4.asset.json        Lumen Coffee — motion ad (video)
       aurora.mp4.asset.json              Aurora AI  — product film (video)
       nimbus-ai.mp4.asset.json           Nimbus AI  — brand motion (video)
+
+  certs/  (real certificates shown in the Certificates carousel)
+      ai-fundamentals.png.asset.json         Microsoft Learn — AI Fundamentals
+      graphic-design.png.asset.json          PixelNexus Solutions — Graphic Design
+      saylani-digital-marketing.png.asset.json  Saylani Mass Training — Digital Marketing
+      hubspot-social-media.png.asset.json    HubSpot Academy — Social Media
 
 ------------------------------------------------------------------------
  6. HOW THE WORK SECTION RENDERS MEDIA
