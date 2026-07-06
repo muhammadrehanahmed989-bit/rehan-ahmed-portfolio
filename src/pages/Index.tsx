@@ -420,6 +420,108 @@ const Skills = () => (
   </Section>
 );
 
+/* ---------------- CERTIFICATES (auto cross-fade slideshow) ---------------- */
+
+// Cross-fading certificate carousel. All four certificates live inside a
+// single luxury glass card. Every ~4 seconds the current cert fades out
+// smoothly and the next one fades in. Users can also click the dots to
+// jump directly to a specific certificate.
+const certificates = [
+  { title: "AI Fundamentals",     issuer: "Microsoft Learn",        year: "2024", img: aiCertAsset.url },
+  { title: "Graphic Designing",   issuer: "Pixel Nexus Solutions",  year: "2020", img: gdCertAsset.url },
+  { title: "Digital Marketing",   issuer: "Saylani Mass Training",  year: "2020", img: saylaniCertAsset.url },
+  { title: "Social Media Cert.",  issuer: "HubSpot Academy",        year: "2023", img: hubspotCertAsset.url },
+];
+
+const Certificates = () => {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    // Auto-advance the slideshow every 4.5s.
+    const t = setInterval(() => setI((n) => (n + 1) % certificates.length), 4500);
+    return () => clearInterval(t);
+  }, []);
+  const c = certificates[i];
+  return (
+    <Section
+      id="certificates"
+      eyebrow="Certificates"
+      title={<>Verified <span className="gradient-text">craft & credentials.</span></>}
+      kicker="Continuously certified across AI, digital marketing, social media and design."
+    >
+      <div className="grid lg:grid-cols-[1.3fr_1fr] gap-8 items-center">
+        {/* Slideshow card */}
+        <Floaty amount={8} duration={8}>
+          <div className="relative glass-strong glass-border-glow rounded-[36px] p-4 sm:p-6 aspect-[4/3] overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, scale: 0.97, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.02, y: -12 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-4 sm:inset-6 rounded-3xl overflow-hidden ring-1 ring-white/60 bg-white"
+              >
+                <img
+                  src={c.img}
+                  alt={`${c.title} — ${c.issuer}`}
+                  loading="lazy"
+                  className="h-full w-full object-contain"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+              </motion.div>
+            </AnimatePresence>
+            {/* Dots */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 glass rounded-full px-3 py-1.5 z-10">
+              {certificates.map((_, k) => (
+                <button
+                  key={k}
+                  aria-label={`Show certificate ${k + 1}`}
+                  onClick={() => setI(k)}
+                  className={`h-2 rounded-full transition-all ${k === i ? "w-6 gradient-brand" : "w-2 bg-muted"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </Floaty>
+
+        {/* Details */}
+        <div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={c.title}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="inline-flex items-center gap-2 glass rounded-full px-3 py-1 mb-4 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
+                <Award size={12} className="text-primary" /> {c.year}
+              </div>
+              <h3 className="font-display text-3xl sm:text-4xl font-semibold text-balance leading-tight">
+                {c.title}
+              </h3>
+              <p className="mt-3 text-lg text-muted-foreground">
+                Issued by <span className="text-foreground font-medium">{c.issuer}</span>
+              </p>
+            </motion.div>
+          </AnimatePresence>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {certificates.map((cert, k) => (
+              <button
+                key={cert.title}
+                onClick={() => setI(k)}
+                className={`glass rounded-full px-3 py-1.5 text-xs transition-all ${k === i ? "ring-2 ring-primary/50 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {cert.title}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+};
+
 /* ---------------- JOURNEY ---------------- */
 
 const journey = [
