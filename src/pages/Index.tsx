@@ -1068,6 +1068,126 @@ const testimonials = [
   },
 ];
 
+// Endpoint that forwards feedback submissions to Rehan's Gmail inbox
+// for manual approval before they get published on the site.
+const FEEDBACK_ENDPOINT = `https://formsubmit.co/ajax/${"muhammadrehanahmed989@gmail.com"}`;
+
+// "Leave a feedback" form. Every submission is emailed to Rehan's Gmail
+// where it can be reviewed and, if approved, added to the testimonials
+// array above in a future update.
+const LeaveFeedback = () => {
+  const [sending, setSending] = useState(false);
+  const [rating, setRating] = useState(5);
+
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const country = String(data.get("country") || "").trim();
+    const role = String(data.get("role") || "").trim();
+    const quote = String(data.get("quote") || "").trim();
+
+    if (!name || !quote) {
+      toast({ title: "Missing fields", description: "Name and feedback are required.", variant: "destructive" });
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await fetch(FEEDBACK_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          type: "FEEDBACK · Awaiting approval",
+          name, country, role, rating: `${rating} / 5`, quote,
+          _subject: `New feedback from ${name}${country ? ` (${country})` : ""} — awaiting approval`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && (json.success === "true" || json.success === true)) {
+        form.reset();
+        setRating(5);
+        toast({ title: "Feedback submitted ✨", description: "Thank you! Your feedback was sent to Rehan for approval." });
+      } else {
+        throw new Error(json.message || "Something went wrong");
+      }
+    } catch (err: any) {
+      toast({ title: "Couldn't submit feedback", description: err?.message || "Please try again.", variant: "destructive" });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ ...spring }}
+      className="mt-14"
+    >
+      <Floaty amount={5} duration={8}>
+        <form onSubmit={submit} className="glass-strong glass-border-glow rounded-[36px] p-6 sm:p-8 max-w-3xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-11 w-11 rounded-2xl gradient-brand flex items-center justify-center text-white">
+              <MessageSquare size={18} />
+            </div>
+            <div>
+              <div className="font-display text-lg font-semibold">Leave a feedback</div>
+              <div className="text-xs text-muted-foreground">Reviewed by Rehan before it appears here.</div>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Name</span>
+              <input name="name" required maxLength={80} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Your name" />
+            </label>
+            <label className="block">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Country</span>
+              <input name="country" maxLength={60} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Country" />
+            </label>
+          </div>
+          <label className="block mt-4">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Role / Company</span>
+            <input name="role" maxLength={120} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Founder, Nova Skincare" />
+          </label>
+          <label className="block mt-4">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Feedback</span>
+            <textarea name="quote" required rows={4} maxLength={800} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40 resize-none" placeholder="Share your experience working with Rehan…" />
+          </label>
+
+          <div className="mt-5 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Rating</span>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setRating(n)}
+                    aria-label={`Rate ${n} stars`}
+                    className={`text-2xl transition-transform hover:scale-110 ${n <= rating ? "text-amber-400" : "text-muted"}`}
+                  >★</button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={sending}
+              className="inline-flex items-center justify-center gap-2 rounded-full gradient-brand px-6 py-3 text-sm font-medium text-white magnetic-btn shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.6)] disabled:opacity-70"
+            >
+              {sending ? (<><Loader2 size={16} className="animate-spin" /> Sending…</>) : (<>Submit feedback <Send size={16} /></>)}
+            </button>
+          </div>
+        </form>
+      </Floaty>
+    </motion.div>
+  );
+};
+
 const Testimonials = () => (
   <Section
     id="testimonials"
@@ -1115,6 +1235,7 @@ const Testimonials = () => (
         </motion.div>
       ))}
     </div>
+    <LeaveFeedback />
   </Section>
 );
 
