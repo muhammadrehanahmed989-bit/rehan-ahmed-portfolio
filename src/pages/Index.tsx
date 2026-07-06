@@ -315,37 +315,42 @@ const About = () => (
           </Floaty>
         </motion.div>
 
-        {/* Revolving pillar cards */}
+        {/* Revolving pillar cards — centering wrapper stays put, inner wrapper spins */}
         {pillars.map((p, i) => {
           const duration = 34;
           const angleOffset = (i / pillars.length) * duration;
           return (
             <div
               key={p.label}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                ["--r" as any]: "min(180px, 34vw)",
-                animation: `orbit ${duration}s linear infinite`,
-                animationDelay: `-${angleOffset}s`,
-              }}
+              className="absolute top-1/2 left-1/2 h-0 w-0 pointer-events-none"
             >
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ ...spring, delay: 0.4 + i * 0.15 }}
+              <div
+                className="absolute"
+                style={{
+                  ["--r" as any]: "min(180px, 34vw)",
+                  animation: `orbit ${duration}s linear infinite`,
+                  animationDelay: `-${angleOffset}s`,
+                }}
               >
-                <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.25}>
-                  <div className="glass glass-border-glow rounded-3xl p-3 sm:p-4 w-28 sm:w-36 text-center hover:-translate-y-1 transition-transform">
-                    <div className="mx-auto h-9 w-9 sm:h-10 sm:w-10 rounded-2xl flex items-center justify-center mb-1.5 sm:mb-2"
-                      style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
-                      <p.icon size={18} />
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ ...spring, delay: 0.4 + i * 0.15 }}
+                  className="-translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+                >
+                  <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.25}>
+                    <div className="glass glass-border-glow rounded-3xl p-3 sm:p-4 w-28 sm:w-36 text-center hover:-translate-y-1 transition-transform">
+                      <div className="mx-auto h-9 w-9 sm:h-10 sm:w-10 rounded-2xl flex items-center justify-center mb-1.5 sm:mb-2"
+                        style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
+                        <p.icon size={18} />
+                      </div>
+                      <div className="font-display font-semibold text-xs sm:text-sm text-foreground">{p.label}</div>
+                      <div className="hidden sm:block text-[11px] text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
                     </div>
-                    <div className="font-display font-semibold text-xs sm:text-sm text-foreground">{p.label}</div>
-                    <div className="hidden sm:block text-[11px] text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
-                  </div>
-                </Floaty>
-              </motion.div>
+                  </Floaty>
+                </motion.div>
+              </div>
             </div>
           );
         })}
