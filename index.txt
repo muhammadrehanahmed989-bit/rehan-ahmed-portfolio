@@ -72,16 +72,31 @@ Purpose of this file:
 
     Hero          → Name, tagline, CTA buttons, live stats,
                     portrait with orbiting social/tool icons.
-    About         → Bio + revolving pillar diagram (Growth /
-                    Design / AI / Build cards orbit around
-                    "Rehan Ahmed" center).
+    About         → Bio + revolving pillar diagram. Cards orbit
+                    perfectly around the centered "Rehan Ahmed"
+                    badge (fixed centering wrapper + inner orbit
+                    wrapper so the animation transform no longer
+                    cancels the centering translate).
     Skills        → Bento grid of skills with animated
                     progress bars.
+    Certificates  → NEW. Single luxury glass card that
+                    cross-fades through 4 real certificates
+                    (Microsoft AI Fundamentals, PixelNexus
+                    Graphic Design, Saylani Digital Marketing,
+                    HubSpot Social Media). Auto-advances every
+                    4.5s; dots + chips let you jump manually.
     Journey       → Timeline of career milestones (2019 → 2026).
-    Work          → 8 signature project cards. Each card shows
-                    a real image OR autoplaying video preview
-                    (see section 6 below).
-    Testimonials  → 9 client reviews with country flags & avatars.
+    Work          → 8 signature project cards. Each card's
+                    bottom-right arrow opens a liquid-glass
+                    case-study modal (CaseStudyModal) with the
+                    project's client, role, timeline, challenge,
+                    solution and results. Works on laptop + mobile.
+                    Modal closes on ESC, backdrop click or ×.
+    Testimonials  → 9 client reviews with country flags & avatars,
+                    followed by a "Leave a feedback" form
+                    (LeaveFeedback). Submissions are emailed to
+                    Rehan's Gmail via FormSubmit for manual
+                    approval before being added to the site.
     Contact       → Direct-line card + fully functional Gmail
                     contact form (see section 7 below).
     Footer        → Small brand footer with © line.
@@ -106,6 +121,12 @@ Purpose of this file:
       lumen-coffee.mp4.asset.json        Lumen Coffee — motion ad (video)
       aurora.mp4.asset.json              Aurora AI  — product film (video)
       nimbus-ai.mp4.asset.json           Nimbus AI  — brand motion (video)
+
+  certs/  (real certificates shown in the Certificates carousel)
+      ai-fundamentals.png.asset.json         Microsoft Learn — AI Fundamentals
+      graphic-design.png.asset.json          PixelNexus Solutions — Graphic Design
+      saylani-digital-marketing.png.asset.json  Saylani Mass Training — Digital Marketing
+      hubspot-social-media.png.asset.json    HubSpot Academy — Social Media
 
 ------------------------------------------------------------------------
  6. HOW THE WORK SECTION RENDERS MEDIA
@@ -149,6 +170,25 @@ Purpose of this file:
     once — after that, all future submissions arrive automatically
     in his Gmail inbox with no further setup.
 
+  FEEDBACK FORM (Testimonials section → LeaveFeedback):
+    Uses the same FormSubmit endpoint. Every submission is
+    emailed to Rehan for approval before it is manually added
+    to the `testimonials` array. Fields: name, country, role,
+    rating (1–5 stars), quote.
+
+  WORK CASE STUDY MODAL (Work section → CaseStudyModal):
+    Clicking any project card's arrow (or the media itself)
+    opens a liquid-glass modal with client, role, timeline,
+    challenge, solution and result bullets. Closes on ESC,
+    backdrop click, or the × button. Same behavior on laptop
+    and mobile.
+
+  CERTIFICATES CAROUSEL (Certificates section):
+    Auto cross-fades through 4 certificates every 4.5 seconds
+    using AnimatePresence. Dots and chip buttons let the user
+    jump to any specific certificate.
+
+
 ------------------------------------------------------------------------
  8. STYLING CONVENTIONS
 ------------------------------------------------------------------------
@@ -174,7 +214,9 @@ Purpose of this file:
   Add / edit skills ................... `skills` array in Index.tsx
   Add / edit journey milestones ....... `journey` array in Index.tsx
   Add / edit portfolio projects ....... `projects` array in Index.tsx
+  Add / edit case study copy .......... `projects` array (challenge/solution/results)
   Add / edit testimonials ............. `testimonials` array in Index.tsx
+  Add / edit certificates ............. `certificates` array in Index.tsx
   Change contact email destination .... CONTACT_EMAIL const in Contact
   Change brand colors / gradients ..... src/index.css  (:root section)
   Change fonts ........................ index.html <link> + index.css

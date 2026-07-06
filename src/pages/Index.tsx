@@ -1,10 +1,10 @@
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence, type Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
   ArrowRight, ArrowUpRight, Sparkles, Cpu, Palette, Rocket, Github, Linkedin, Instagram,
   Mail, MapPin, Zap, Layers, Wand2, LineChart, MessageSquare, Brain, Code2, Figma,
   Award, GraduationCap, Trophy, ExternalLink, Send, GraduationCap as MSIcon,
-  BarChart3, Target, Bot, Workflow, Tag, PieChart, Loader2, CheckCircle2,
+  BarChart3, Target, Bot, Workflow, Tag, PieChart, Loader2, CheckCircle2, X,
 } from "lucide-react";
 import portraitAsset from "@/assets/portrait.png.asset.json";
 import noorAsset from "@/assets/work/noor-apparel.png.asset.json";
@@ -15,6 +15,10 @@ import vertexAsset from "@/assets/work/vertex-fitness.png.asset.json";
 import lumenAsset from "@/assets/work/lumen-coffee.mp4.asset.json";
 import auroraAsset from "@/assets/work/aurora.mp4.asset.json";
 import nimbusAsset from "@/assets/work/nimbus-ai.mp4.asset.json";
+import aiCertAsset from "@/assets/certs/ai-fundamentals.png.asset.json";
+import gdCertAsset from "@/assets/certs/graphic-design.png.asset.json";
+import saylaniCertAsset from "@/assets/certs/saylani-digital-marketing.png.asset.json";
+import hubspotCertAsset from "@/assets/certs/hubspot-social-media.png.asset.json";
 import { Nav } from "@/components/Nav";
 import { Background } from "@/components/Background";
 import { MouseSpotlight } from "@/components/MouseSpotlight";
@@ -311,37 +315,42 @@ const About = () => (
           </Floaty>
         </motion.div>
 
-        {/* Revolving pillar cards */}
+        {/* Revolving pillar cards — centering wrapper stays put, inner wrapper spins */}
         {pillars.map((p, i) => {
           const duration = 34;
           const angleOffset = (i / pillars.length) * duration;
           return (
             <div
               key={p.label}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                ["--r" as any]: "min(180px, 34vw)",
-                animation: `orbit ${duration}s linear infinite`,
-                animationDelay: `-${angleOffset}s`,
-              }}
+              className="absolute top-1/2 left-1/2 h-0 w-0 pointer-events-none"
             >
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ ...spring, delay: 0.4 + i * 0.15 }}
+              <div
+                className="absolute"
+                style={{
+                  ["--r" as any]: "min(180px, 34vw)",
+                  animation: `orbit ${duration}s linear infinite`,
+                  animationDelay: `-${angleOffset}s`,
+                }}
               >
-                <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.25}>
-                  <div className="glass glass-border-glow rounded-3xl p-3 sm:p-4 w-28 sm:w-36 text-center hover:-translate-y-1 transition-transform">
-                    <div className="mx-auto h-9 w-9 sm:h-10 sm:w-10 rounded-2xl flex items-center justify-center mb-1.5 sm:mb-2"
-                      style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
-                      <p.icon size={18} />
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ ...spring, delay: 0.4 + i * 0.15 }}
+                  className="-translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+                >
+                  <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.25}>
+                    <div className="glass glass-border-glow rounded-3xl p-3 sm:p-4 w-28 sm:w-36 text-center hover:-translate-y-1 transition-transform">
+                      <div className="mx-auto h-9 w-9 sm:h-10 sm:w-10 rounded-2xl flex items-center justify-center mb-1.5 sm:mb-2"
+                        style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
+                        <p.icon size={18} />
+                      </div>
+                      <div className="font-display font-semibold text-xs sm:text-sm text-foreground">{p.label}</div>
+                      <div className="hidden sm:block text-[11px] text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
                     </div>
-                    <div className="font-display font-semibold text-xs sm:text-sm text-foreground">{p.label}</div>
-                    <div className="hidden sm:block text-[11px] text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
-                  </div>
-                </Floaty>
-              </motion.div>
+                  </Floaty>
+                </motion.div>
+              </div>
             </div>
           );
         })}
@@ -411,6 +420,108 @@ const Skills = () => (
   </Section>
 );
 
+/* ---------------- CERTIFICATES (auto cross-fade slideshow) ---------------- */
+
+// Cross-fading certificate carousel. All four certificates live inside a
+// single luxury glass card. Every ~4 seconds the current cert fades out
+// smoothly and the next one fades in. Users can also click the dots to
+// jump directly to a specific certificate.
+const certificates = [
+  { title: "AI Fundamentals",     issuer: "Microsoft Learn",        year: "2024", img: aiCertAsset.url },
+  { title: "Graphic Designing",   issuer: "Pixel Nexus Solutions",  year: "2020", img: gdCertAsset.url },
+  { title: "Digital Marketing",   issuer: "Saylani Mass Training",  year: "2020", img: saylaniCertAsset.url },
+  { title: "Social Media Cert.",  issuer: "HubSpot Academy",        year: "2023", img: hubspotCertAsset.url },
+];
+
+const Certificates = () => {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    // Auto-advance the slideshow every 4.5s.
+    const t = setInterval(() => setI((n) => (n + 1) % certificates.length), 4500);
+    return () => clearInterval(t);
+  }, []);
+  const c = certificates[i];
+  return (
+    <Section
+      id="certificates"
+      eyebrow="Certificates"
+      title={<>Verified <span className="gradient-text">craft & credentials.</span></>}
+      kicker="Continuously certified across AI, digital marketing, social media and design."
+    >
+      <div className="grid lg:grid-cols-[1.3fr_1fr] gap-8 items-center">
+        {/* Slideshow card */}
+        <Floaty amount={8} duration={8}>
+          <div className="relative glass-strong glass-border-glow rounded-[36px] p-4 sm:p-6 aspect-[4/3] overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, scale: 0.97, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.02, y: -12 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-4 sm:inset-6 rounded-3xl overflow-hidden ring-1 ring-white/60 bg-white"
+              >
+                <img
+                  src={c.img}
+                  alt={`${c.title} — ${c.issuer}`}
+                  loading="lazy"
+                  className="h-full w-full object-contain"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+              </motion.div>
+            </AnimatePresence>
+            {/* Dots */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 glass rounded-full px-3 py-1.5 z-10">
+              {certificates.map((_, k) => (
+                <button
+                  key={k}
+                  aria-label={`Show certificate ${k + 1}`}
+                  onClick={() => setI(k)}
+                  className={`h-2 rounded-full transition-all ${k === i ? "w-6 gradient-brand" : "w-2 bg-muted"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </Floaty>
+
+        {/* Details */}
+        <div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={c.title}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="inline-flex items-center gap-2 glass rounded-full px-3 py-1 mb-4 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
+                <Award size={12} className="text-primary" /> {c.year}
+              </div>
+              <h3 className="font-display text-3xl sm:text-4xl font-semibold text-balance leading-tight">
+                {c.title}
+              </h3>
+              <p className="mt-3 text-lg text-muted-foreground">
+                Issued by <span className="text-foreground font-medium">{c.issuer}</span>
+              </p>
+            </motion.div>
+          </AnimatePresence>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {certificates.map((cert, k) => (
+              <button
+                key={cert.title}
+                onClick={() => setI(k)}
+                className={`glass rounded-full px-3 py-1.5 text-xs transition-all ${k === i ? "ring-2 ring-primary/50 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {cert.title}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+};
+
 /* ---------------- JOURNEY ---------------- */
 
 const journey = [
@@ -469,88 +580,240 @@ type Project = {
   color: string;
   media: string;
   type: "image" | "video";
+  // Case study fields — shown inside the liquid glass modal when the
+  // arrow button on the card is clicked.
+  client: string;
+  role: string;
+  timeline: string;
+  challenge: string;
+  solution: string;
+  results: string[];
 };
 
 const projects: Project[] = [
-  { title: "Noor Apparel",     tag: "Meta Ads · Luxury DTC",       desc: "Full brand & campaign system — cinematic creatives, 4.6x blended ROAS.",         color: "#A78BFA", media: noorAsset.url,   type: "image" },
-  { title: "Bloom Café",       tag: "Social · Content System",     desc: "Monthly content engine that grew followers 32% and engagement 48% in 90 days.", color: "#34D399", media: bloomAsset.url,  type: "image" },
-  { title: "Pulse Analytics",  tag: "SaaS · Dashboard UI",         desc: "Analytics platform brand + product UI for campaign performance intelligence.",   color: "#F472B6", media: pulseAsset.url,  type: "image" },
-  { title: "Halo Studio",      tag: "Branding · Identity",         desc: "Creative branding agency identity — strategy, typography, packaging, guidelines.", color: "#8B5CF6", media: haloAsset.url,   type: "image" },
-  { title: "Vertex Fitness",   tag: "Performance · Web Hero",      desc: "High-conversion fitness landing with cinematic hero and premium product storytelling.", color: "#22D3EE", media: vertexAsset.url, type: "image" },
-  { title: "Lumen Coffee",     tag: "Motion · Ad Creative",        desc: "Signature motion ad for a specialty coffee house — engineered for scroll-stop.", color: "#F59E0B", media: lumenAsset.url,  type: "video" },
-  { title: "Aurora AI",        tag: "AI · Product Film",           desc: "Generative product film for an AI creative pipeline launch.",                     color: "#60A5FA", media: auroraAsset.url, type: "video" },
-  { title: "Nimbus AI",        tag: "AI · Brand Motion",           desc: "Brand motion piece for a cloud-native AI platform reveal.",                       color: "#EC4899", media: nimbusAsset.url, type: "video" },
+  { title: "Noor Apparel",     tag: "Meta Ads · Luxury DTC",       desc: "Full brand & campaign system — cinematic creatives, 4.6x blended ROAS.",         color: "#A78BFA", media: noorAsset.url,   type: "image",
+    client: "Noor Apparel — Dubai", role: "Meta Ads Lead & Creative Director", timeline: "12 weeks",
+    challenge: "A rising luxury DTC label was stuck at 1.8x ROAS with creatives that felt like every other fashion brand on Instagram.",
+    solution: "Rebuilt the ad account from scratch with an editorial creative system, AI-directed campaign visuals, structured testing, and a full-funnel Meta Ads architecture.",
+    results: ["4.6x blended ROAS in 60 days", "CPA reduced by 42%", "3.1M cinematic ad impressions"] },
+  { title: "Bloom Café",       tag: "Social · Content System",     desc: "Monthly content engine that grew followers 32% and engagement 48% in 90 days.", color: "#34D399", media: bloomAsset.url,  type: "image",
+    client: "Bloom Café — Faisalabad", role: "Social Content Director", timeline: "90 days",
+    challenge: "A specialty café with beautiful interiors had a flat social presence and no repeatable content system.",
+    solution: "Designed a monthly content engine — pillar themes, shot lists, editorial calendar, and post templates crafted in a signature brand voice.",
+    results: ["+32% follower growth", "+48% engagement rate", "Consistent daily publishing rhythm"] },
+  { title: "Pulse Analytics",  tag: "SaaS · Dashboard UI",         desc: "Analytics platform brand + product UI for campaign performance intelligence.",   color: "#F472B6", media: pulseAsset.url,  type: "image",
+    client: "Pulse Analytics", role: "Product Designer & Brand Lead", timeline: "8 weeks",
+    challenge: "A young ad analytics startup needed a serious identity and a dashboard that made complex data feel effortless.",
+    solution: "Built a full brand system, then designed a modular dashboard UI with premium data-viz, animated states and a dark editorial palette.",
+    results: ["Closed seed round after rebrand", "Onboarding time cut in half", "NPS jumped from 32 to 61"] },
+  { title: "Halo Studio",      tag: "Branding · Identity",         desc: "Creative branding agency identity — strategy, typography, packaging, guidelines.", color: "#8B5CF6", media: haloAsset.url,   type: "image",
+    client: "Halo Studio", role: "Creative Director", timeline: "6 weeks",
+    challenge: "A boutique creative studio wanted an identity that could hold its own against global agencies.",
+    solution: "Delivered a full identity system — logo suite, editorial typography, packaging, motion guidelines and a photography direction.",
+    results: ["3 international brand pitches won post-launch", "Featured on 2 design showcases", "Full guidelines shipped in 6 weeks"] },
+  { title: "Vertex Fitness",   tag: "Performance · Web Hero",      desc: "High-conversion fitness landing with cinematic hero and premium product storytelling.", color: "#22D3EE", media: vertexAsset.url, type: "image",
+    client: "Vertex Fitness", role: "Web Designer & Growth Consultant", timeline: "5 weeks",
+    challenge: "Landing page was converting under 1% despite strong paid traffic.",
+    solution: "Rewrote the funnel copy, rebuilt the hero with cinematic motion, restructured the offer, and tightened the entire on-page journey.",
+    results: ["Conversion up from 0.9% → 3.4%", "Bounce rate down 38%", "Ad ROAS lifted 2.2x"] },
+  { title: "Lumen Coffee",     tag: "Motion · Ad Creative",        desc: "Signature motion ad for a specialty coffee house — engineered for scroll-stop.", color: "#F59E0B", media: lumenAsset.url,  type: "video",
+    client: "Lumen Coffee", role: "Motion Director", timeline: "3 weeks",
+    challenge: "Needed a scroll-stopping motion ad for a premium coffee launch — without the usual food-brand clichés.",
+    solution: "Directed a warm, cinematic motion piece with AI-generated hero visuals, custom sound design and tight product storytelling.",
+    results: ["6.2s average watch time", "38% higher CTR than benchmark", "Sold out first roast in 11 days"] },
+  { title: "Aurora AI",        tag: "AI · Product Film",           desc: "Generative product film for an AI creative pipeline launch.",                     color: "#60A5FA", media: auroraAsset.url, type: "video",
+    client: "Aurora AI", role: "AI Creative Director", timeline: "4 weeks",
+    challenge: "New AI product had a highly technical value prop and needed an emotional launch film.",
+    solution: "Directed a fully generative product film combining AI motion, custom typography and a soundtrack that gave the product a soul.",
+    results: ["1.4M organic views in 30 days", "Waitlist grew 5x on launch week", "Featured in 3 AI newsletters"] },
+  { title: "Nimbus AI",        tag: "AI · Brand Motion",           desc: "Brand motion piece for a cloud-native AI platform reveal.",                       color: "#EC4899", media: nimbusAsset.url, type: "video",
+    client: "Nimbus AI", role: "Brand Motion Lead", timeline: "3 weeks",
+    challenge: "A cloud-native AI platform needed a reveal moment that felt as premium as its infrastructure.",
+    solution: "Crafted a signature brand motion piece — logo build, particle systems, and cinematic camera language matched to the sonic identity.",
+    results: ["Adopted as the hero motion across all channels", "40% lift in demo requests", "Used in 2 investor decks"] },
 ];
 
-const Work = () => (
-  <Section
-    id="work"
-    eyebrow="Work"
-    title={<>Selected <span className="gradient-text">signature</span> projects.</>}
-    kicker="Real brands, real launches — each one engineered where luxury design meets measurable performance."
-  >
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {projects.map((p, i) => (
+// Liquid glass case-study modal. Opens from the arrow button on each Work
+// card, on both laptop and mobile. Closes on backdrop click, ESC key, or
+// the close button.
+const CaseStudyModal: React.FC<{ project: Project | null; onClose: () => void }> = ({ project, onClose }) => {
+  useEffect(() => {
+    if (!project) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [project, onClose]);
+
+  return (
+    <AnimatePresence>
+      {project && (
         <motion.div
-          key={p.title}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...spring, delay: i * 0.06 }}
-          className="group relative"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8"
         >
-          <Floaty amount={5} duration={7 + (i % 3)} delay={i * 0.25}>
+          <div className="absolute inset-0 bg-foreground/20 backdrop-blur-xl" onClick={onClose} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ ...spring }}
+            className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto glass-strong glass-border-glow rounded-[32px] p-6 sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="case-study-title"
+          >
+            <button
+              onClick={onClose}
+              aria-label="Close case study"
+              className="absolute top-4 right-4 h-10 w-10 rounded-full glass flex items-center justify-center hover:gradient-brand hover:text-white transition-all z-10"
+            >
+              <X size={18} />
+            </button>
+
+            <div
+              className="aspect-[16/10] rounded-3xl overflow-hidden relative ring-1 ring-white/60 mb-6"
+              style={{ background: `linear-gradient(135deg, ${project.color}22, #22D3EE22)` }}
+            >
+              {project.type === "image" ? (
+                <img src={project.media} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+              ) : (
+                <video src={project.media} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+              )}
+              <div className="absolute top-3 left-3 glass-strong rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest">
+                {project.tag}
+              </div>
+            </div>
+
+            <h3 id="case-study-title" className="font-display text-3xl sm:text-4xl font-semibold leading-tight">
+              {project.title}
+            </h3>
+            <p className="mt-2 text-muted-foreground">{project.desc}</p>
+
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { k: "Client",   v: project.client },
+                { k: "Role",     v: project.role },
+                { k: "Timeline", v: project.timeline },
+              ].map((m) => (
+                <div key={m.k} className="glass rounded-2xl p-3">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{m.k}</div>
+                  <div className="text-sm font-medium mt-1">{m.v}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 space-y-5">
+              <div>
+                <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">The Challenge</div>
+                <p className="text-foreground/90 leading-relaxed">{project.challenge}</p>
+              </div>
+              <div>
+                <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">The Solution</div>
+                <p className="text-foreground/90 leading-relaxed">{project.solution}</p>
+              </div>
+              <div>
+                <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">Results</div>
+                <ul className="space-y-2">
+                  {project.results.map((r) => (
+                    <li key={r} className="flex items-start gap-2">
+                      <CheckCircle2 size={16} className="text-primary shrink-0 mt-0.5" />
+                      <span className="text-foreground/90">{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
             <a
               href="#contact"
-              className="block glass glass-border-glow rounded-[32px] p-4 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.4)]"
+              onClick={onClose}
+              className="mt-8 w-full inline-flex items-center justify-center gap-2 rounded-full gradient-brand px-6 py-3.5 text-sm font-medium text-white magnetic-btn shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.6)]"
             >
-              <div
-                className="aspect-[16/10] rounded-3xl overflow-hidden relative mb-5 ring-1 ring-white/60"
-                style={{ background: `linear-gradient(135deg, ${p.color}22, #22D3EE22)` }}
-              >
-                {p.type === "image" ? (
-                  <img
-                    src={p.media}
-                    alt={p.title}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <video
-                    src={p.media}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute top-3 left-3">
-                  <div className="glass-strong rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest">{p.tag}</div>
-                </div>
-                <div
-                  className="absolute -inset-10 rounded-full blur-3xl opacity-30 pointer-events-none"
-                  style={{ background: p.color }}
-                />
-              </div>
-              <div className="flex items-start justify-between gap-3 px-2 pb-2">
-                <div>
-                  <div className="font-display text-xl font-semibold">{p.title}</div>
-                  <div className="text-sm text-muted-foreground mt-1">{p.desc}</div>
-                </div>
-                <div className="h-9 w-9 rounded-full glass flex items-center justify-center shrink-0 group-hover:gradient-brand group-hover:text-white transition-all">
-                  <ArrowUpRight size={16} />
-                </div>
-              </div>
+              Start a project like this <ArrowRight size={16} />
             </a>
-          </Floaty>
+          </motion.div>
         </motion.div>
-      ))}
-    </div>
-  </Section>
-);
+      )}
+    </AnimatePresence>
+  );
+};
+
+const Work = () => {
+  // Which project's case study is currently open (null = closed).
+  const [openProject, setOpenProject] = useState<Project | null>(null);
+  return (
+    <Section
+      id="work"
+      eyebrow="Work"
+      title={<>Selected <span className="gradient-text">signature</span> projects.</>}
+      kicker="Real brands, real launches — each one engineered where luxury design meets measurable performance."
+    >
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((p, i) => (
+          <motion.div
+            key={p.title}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ ...spring, delay: i * 0.06 }}
+            className="group relative"
+          >
+            <Floaty amount={5} duration={7 + (i % 3)} delay={i * 0.25}>
+              <div className="block glass glass-border-glow rounded-[32px] p-4 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.4)]">
+                <button
+                  type="button"
+                  onClick={() => setOpenProject(p)}
+                  className="block w-full text-left"
+                  aria-label={`Open ${p.title} case study`}
+                >
+                  <div
+                    className="aspect-[16/10] rounded-3xl overflow-hidden relative mb-5 ring-1 ring-white/60"
+                    style={{ background: `linear-gradient(135deg, ${p.color}22, #22D3EE22)` }}
+                  >
+                    {p.type === "image" ? (
+                      <img src={p.media} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    ) : (
+                      <video src={p.media} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute top-3 left-3">
+                      <div className="glass-strong rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest">{p.tag}</div>
+                    </div>
+                    <div className="absolute -inset-10 rounded-full blur-3xl opacity-30 pointer-events-none" style={{ background: p.color }} />
+                  </div>
+                </button>
+                <div className="flex items-start justify-between gap-3 px-2 pb-2">
+                  <div>
+                    <div className="font-display text-xl font-semibold">{p.title}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{p.desc}</div>
+                  </div>
+                  {/* Arrow — opens the liquid glass case-study modal. */}
+                  <button
+                    type="button"
+                    onClick={() => setOpenProject(p)}
+                    aria-label={`View ${p.title} case study`}
+                    className="h-9 w-9 rounded-full glass flex items-center justify-center shrink-0 hover:gradient-brand hover:text-white transition-all"
+                  >
+                    <ArrowUpRight size={16} />
+                  </button>
+                </div>
+              </div>
+            </Floaty>
+          </motion.div>
+        ))}
+      </div>
+      <CaseStudyModal project={openProject} onClose={() => setOpenProject(null)} />
+    </Section>
+  );
+};
+
 
 /* ---------------- CONTACT ---------------- */
 
@@ -805,6 +1068,126 @@ const testimonials = [
   },
 ];
 
+// Endpoint that forwards feedback submissions to Rehan's Gmail inbox
+// for manual approval before they get published on the site.
+const FEEDBACK_ENDPOINT = `https://formsubmit.co/ajax/${"muhammadrehanahmed989@gmail.com"}`;
+
+// "Leave a feedback" form. Every submission is emailed to Rehan's Gmail
+// where it can be reviewed and, if approved, added to the testimonials
+// array above in a future update.
+const LeaveFeedback = () => {
+  const [sending, setSending] = useState(false);
+  const [rating, setRating] = useState(5);
+
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const country = String(data.get("country") || "").trim();
+    const role = String(data.get("role") || "").trim();
+    const quote = String(data.get("quote") || "").trim();
+
+    if (!name || !quote) {
+      toast({ title: "Missing fields", description: "Name and feedback are required.", variant: "destructive" });
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await fetch(FEEDBACK_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          type: "FEEDBACK · Awaiting approval",
+          name, country, role, rating: `${rating} / 5`, quote,
+          _subject: `New feedback from ${name}${country ? ` (${country})` : ""} — awaiting approval`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && (json.success === "true" || json.success === true)) {
+        form.reset();
+        setRating(5);
+        toast({ title: "Feedback submitted ✨", description: "Thank you! Your feedback was sent to Rehan for approval." });
+      } else {
+        throw new Error(json.message || "Something went wrong");
+      }
+    } catch (err: any) {
+      toast({ title: "Couldn't submit feedback", description: err?.message || "Please try again.", variant: "destructive" });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ ...spring }}
+      className="mt-14"
+    >
+      <Floaty amount={5} duration={8}>
+        <form onSubmit={submit} className="glass-strong glass-border-glow rounded-[36px] p-6 sm:p-8 max-w-3xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-11 w-11 rounded-2xl gradient-brand flex items-center justify-center text-white">
+              <MessageSquare size={18} />
+            </div>
+            <div>
+              <div className="font-display text-lg font-semibold">Leave a feedback</div>
+              <div className="text-xs text-muted-foreground">Reviewed by Rehan before it appears here.</div>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Name</span>
+              <input name="name" required maxLength={80} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Your name" />
+            </label>
+            <label className="block">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Country</span>
+              <input name="country" maxLength={60} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Country" />
+            </label>
+          </div>
+          <label className="block mt-4">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Role / Company</span>
+            <input name="role" maxLength={120} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40" placeholder="Founder, Nova Skincare" />
+          </label>
+          <label className="block mt-4">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Feedback</span>
+            <textarea name="quote" required rows={4} maxLength={800} className="mt-2 w-full rounded-2xl glass px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/40 resize-none" placeholder="Share your experience working with Rehan…" />
+          </label>
+
+          <div className="mt-5 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Rating</span>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setRating(n)}
+                    aria-label={`Rate ${n} stars`}
+                    className={`text-2xl transition-transform hover:scale-110 ${n <= rating ? "text-amber-400" : "text-muted"}`}
+                  >★</button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={sending}
+              className="inline-flex items-center justify-center gap-2 rounded-full gradient-brand px-6 py-3 text-sm font-medium text-white magnetic-btn shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.6)] disabled:opacity-70"
+            >
+              {sending ? (<><Loader2 size={16} className="animate-spin" /> Sending…</>) : (<>Submit feedback <Send size={16} /></>)}
+            </button>
+          </div>
+        </form>
+      </Floaty>
+    </motion.div>
+  );
+};
+
 const Testimonials = () => (
   <Section
     id="testimonials"
@@ -852,6 +1235,7 @@ const Testimonials = () => (
         </motion.div>
       ))}
     </div>
+    <LeaveFeedback />
   </Section>
 );
 
@@ -882,6 +1266,7 @@ const Index = () => (
       <Hero />
       <About />
       <Skills />
+      <Certificates />
       <Journey />
       <Work />
       <Testimonials />
