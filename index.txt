@@ -72,15 +72,34 @@ Purpose of this file:
 
     Hero          → Name, tagline, CTA buttons, live stats,
                     portrait with orbiting social/tool icons.
-    About         → Bio + revolving pillar diagram (Growth /
-                    Design / AI / Build cards orbit around
-                    "Rehan Ahmed" center).
+    About         → Bio + revolving pillar diagram. Cards orbit
+                    perfectly around the centered "Rehan Ahmed"
+                    badge (fixed centering wrapper + inner orbit
+                    wrapper so the animation transform no longer
+                    cancels the centering translate).
     Skills        → Bento grid of skills with animated
                     progress bars.
+    Certificates  → NEW. Single luxury glass card that
+                    cross-fades through 4 real certificates
+                    (Microsoft AI Fundamentals, PixelNexus
+                    Graphic Design, Saylani Digital Marketing,
+                    HubSpot Social Media). Auto-advances every
+                    4.5s; dots + chips let you jump manually.
     Journey       → Timeline of career milestones (2019 → 2026).
-    Work          → 8 signature project cards. Each card shows
-                    a real image OR autoplaying video preview
-                    (see section 6 below).
+    Work          → 8 signature project cards. Each card's
+                    bottom-right arrow opens a liquid-glass
+                    case-study modal (CaseStudyModal) with the
+                    project's client, role, timeline, challenge,
+                    solution and results. Works on laptop + mobile.
+                    Modal closes on ESC, backdrop click or ×.
+    Testimonials  → 9 client reviews with country flags & avatars,
+                    followed by a "Leave a feedback" form
+                    (LeaveFeedback). Submissions are emailed to
+                    Rehan's Gmail via FormSubmit for manual
+                    approval before being added to the site.
+    Contact       → Direct-line card + fully functional Gmail
+                    contact form (see section 7 below).
+    Footer        → Small brand footer with © line.
     Testimonials  → 9 client reviews with country flags & avatars.
     Contact       → Direct-line card + fully functional Gmail
                     contact form (see section 7 below).
