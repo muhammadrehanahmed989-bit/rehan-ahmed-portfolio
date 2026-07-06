@@ -1266,6 +1266,7 @@ const Index = () => (
       <Hero />
       <About />
       <Skills />
+      <Certificates />
       <Journey />
       <Work />
       <Testimonials />
