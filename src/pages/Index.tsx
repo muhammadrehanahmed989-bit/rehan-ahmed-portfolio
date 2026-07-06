@@ -580,88 +580,240 @@ type Project = {
   color: string;
   media: string;
   type: "image" | "video";
+  // Case study fields — shown inside the liquid glass modal when the
+  // arrow button on the card is clicked.
+  client: string;
+  role: string;
+  timeline: string;
+  challenge: string;
+  solution: string;
+  results: string[];
 };
 
 const projects: Project[] = [
-  { title: "Noor Apparel",     tag: "Meta Ads · Luxury DTC",       desc: "Full brand & campaign system — cinematic creatives, 4.6x blended ROAS.",         color: "#A78BFA", media: noorAsset.url,   type: "image" },
-  { title: "Bloom Café",       tag: "Social · Content System",     desc: "Monthly content engine that grew followers 32% and engagement 48% in 90 days.", color: "#34D399", media: bloomAsset.url,  type: "image" },
-  { title: "Pulse Analytics",  tag: "SaaS · Dashboard UI",         desc: "Analytics platform brand + product UI for campaign performance intelligence.",   color: "#F472B6", media: pulseAsset.url,  type: "image" },
-  { title: "Halo Studio",      tag: "Branding · Identity",         desc: "Creative branding agency identity — strategy, typography, packaging, guidelines.", color: "#8B5CF6", media: haloAsset.url,   type: "image" },
-  { title: "Vertex Fitness",   tag: "Performance · Web Hero",      desc: "High-conversion fitness landing with cinematic hero and premium product storytelling.", color: "#22D3EE", media: vertexAsset.url, type: "image" },
-  { title: "Lumen Coffee",     tag: "Motion · Ad Creative",        desc: "Signature motion ad for a specialty coffee house — engineered for scroll-stop.", color: "#F59E0B", media: lumenAsset.url,  type: "video" },
-  { title: "Aurora AI",        tag: "AI · Product Film",           desc: "Generative product film for an AI creative pipeline launch.",                     color: "#60A5FA", media: auroraAsset.url, type: "video" },
-  { title: "Nimbus AI",        tag: "AI · Brand Motion",           desc: "Brand motion piece for a cloud-native AI platform reveal.",                       color: "#EC4899", media: nimbusAsset.url, type: "video" },
+  { title: "Noor Apparel",     tag: "Meta Ads · Luxury DTC",       desc: "Full brand & campaign system — cinematic creatives, 4.6x blended ROAS.",         color: "#A78BFA", media: noorAsset.url,   type: "image",
+    client: "Noor Apparel — Dubai", role: "Meta Ads Lead & Creative Director", timeline: "12 weeks",
+    challenge: "A rising luxury DTC label was stuck at 1.8x ROAS with creatives that felt like every other fashion brand on Instagram.",
+    solution: "Rebuilt the ad account from scratch with an editorial creative system, AI-directed campaign visuals, structured testing, and a full-funnel Meta Ads architecture.",
+    results: ["4.6x blended ROAS in 60 days", "CPA reduced by 42%", "3.1M cinematic ad impressions"] },
+  { title: "Bloom Café",       tag: "Social · Content System",     desc: "Monthly content engine that grew followers 32% and engagement 48% in 90 days.", color: "#34D399", media: bloomAsset.url,  type: "image",
+    client: "Bloom Café — Faisalabad", role: "Social Content Director", timeline: "90 days",
+    challenge: "A specialty café with beautiful interiors had a flat social presence and no repeatable content system.",
+    solution: "Designed a monthly content engine — pillar themes, shot lists, editorial calendar, and post templates crafted in a signature brand voice.",
+    results: ["+32% follower growth", "+48% engagement rate", "Consistent daily publishing rhythm"] },
+  { title: "Pulse Analytics",  tag: "SaaS · Dashboard UI",         desc: "Analytics platform brand + product UI for campaign performance intelligence.",   color: "#F472B6", media: pulseAsset.url,  type: "image",
+    client: "Pulse Analytics", role: "Product Designer & Brand Lead", timeline: "8 weeks",
+    challenge: "A young ad analytics startup needed a serious identity and a dashboard that made complex data feel effortless.",
+    solution: "Built a full brand system, then designed a modular dashboard UI with premium data-viz, animated states and a dark editorial palette.",
+    results: ["Closed seed round after rebrand", "Onboarding time cut in half", "NPS jumped from 32 to 61"] },
+  { title: "Halo Studio",      tag: "Branding · Identity",         desc: "Creative branding agency identity — strategy, typography, packaging, guidelines.", color: "#8B5CF6", media: haloAsset.url,   type: "image",
+    client: "Halo Studio", role: "Creative Director", timeline: "6 weeks",
+    challenge: "A boutique creative studio wanted an identity that could hold its own against global agencies.",
+    solution: "Delivered a full identity system — logo suite, editorial typography, packaging, motion guidelines and a photography direction.",
+    results: ["3 international brand pitches won post-launch", "Featured on 2 design showcases", "Full guidelines shipped in 6 weeks"] },
+  { title: "Vertex Fitness",   tag: "Performance · Web Hero",      desc: "High-conversion fitness landing with cinematic hero and premium product storytelling.", color: "#22D3EE", media: vertexAsset.url, type: "image",
+    client: "Vertex Fitness", role: "Web Designer & Growth Consultant", timeline: "5 weeks",
+    challenge: "Landing page was converting under 1% despite strong paid traffic.",
+    solution: "Rewrote the funnel copy, rebuilt the hero with cinematic motion, restructured the offer, and tightened the entire on-page journey.",
+    results: ["Conversion up from 0.9% → 3.4%", "Bounce rate down 38%", "Ad ROAS lifted 2.2x"] },
+  { title: "Lumen Coffee",     tag: "Motion · Ad Creative",        desc: "Signature motion ad for a specialty coffee house — engineered for scroll-stop.", color: "#F59E0B", media: lumenAsset.url,  type: "video",
+    client: "Lumen Coffee", role: "Motion Director", timeline: "3 weeks",
+    challenge: "Needed a scroll-stopping motion ad for a premium coffee launch — without the usual food-brand clichés.",
+    solution: "Directed a warm, cinematic motion piece with AI-generated hero visuals, custom sound design and tight product storytelling.",
+    results: ["6.2s average watch time", "38% higher CTR than benchmark", "Sold out first roast in 11 days"] },
+  { title: "Aurora AI",        tag: "AI · Product Film",           desc: "Generative product film for an AI creative pipeline launch.",                     color: "#60A5FA", media: auroraAsset.url, type: "video",
+    client: "Aurora AI", role: "AI Creative Director", timeline: "4 weeks",
+    challenge: "New AI product had a highly technical value prop and needed an emotional launch film.",
+    solution: "Directed a fully generative product film combining AI motion, custom typography and a soundtrack that gave the product a soul.",
+    results: ["1.4M organic views in 30 days", "Waitlist grew 5x on launch week", "Featured in 3 AI newsletters"] },
+  { title: "Nimbus AI",        tag: "AI · Brand Motion",           desc: "Brand motion piece for a cloud-native AI platform reveal.",                       color: "#EC4899", media: nimbusAsset.url, type: "video",
+    client: "Nimbus AI", role: "Brand Motion Lead", timeline: "3 weeks",
+    challenge: "A cloud-native AI platform needed a reveal moment that felt as premium as its infrastructure.",
+    solution: "Crafted a signature brand motion piece — logo build, particle systems, and cinematic camera language matched to the sonic identity.",
+    results: ["Adopted as the hero motion across all channels", "40% lift in demo requests", "Used in 2 investor decks"] },
 ];
 
-const Work = () => (
-  <Section
-    id="work"
-    eyebrow="Work"
-    title={<>Selected <span className="gradient-text">signature</span> projects.</>}
-    kicker="Real brands, real launches — each one engineered where luxury design meets measurable performance."
-  >
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {projects.map((p, i) => (
+// Liquid glass case-study modal. Opens from the arrow button on each Work
+// card, on both laptop and mobile. Closes on backdrop click, ESC key, or
+// the close button.
+const CaseStudyModal: React.FC<{ project: Project | null; onClose: () => void }> = ({ project, onClose }) => {
+  useEffect(() => {
+    if (!project) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [project, onClose]);
+
+  return (
+    <AnimatePresence>
+      {project && (
         <motion.div
-          key={p.title}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...spring, delay: i * 0.06 }}
-          className="group relative"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8"
         >
-          <Floaty amount={5} duration={7 + (i % 3)} delay={i * 0.25}>
+          <div className="absolute inset-0 bg-foreground/20 backdrop-blur-xl" onClick={onClose} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ ...spring }}
+            className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto glass-strong glass-border-glow rounded-[32px] p-6 sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="case-study-title"
+          >
+            <button
+              onClick={onClose}
+              aria-label="Close case study"
+              className="absolute top-4 right-4 h-10 w-10 rounded-full glass flex items-center justify-center hover:gradient-brand hover:text-white transition-all z-10"
+            >
+              <X size={18} />
+            </button>
+
+            <div
+              className="aspect-[16/10] rounded-3xl overflow-hidden relative ring-1 ring-white/60 mb-6"
+              style={{ background: `linear-gradient(135deg, ${project.color}22, #22D3EE22)` }}
+            >
+              {project.type === "image" ? (
+                <img src={project.media} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+              ) : (
+                <video src={project.media} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+              )}
+              <div className="absolute top-3 left-3 glass-strong rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest">
+                {project.tag}
+              </div>
+            </div>
+
+            <h3 id="case-study-title" className="font-display text-3xl sm:text-4xl font-semibold leading-tight">
+              {project.title}
+            </h3>
+            <p className="mt-2 text-muted-foreground">{project.desc}</p>
+
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { k: "Client",   v: project.client },
+                { k: "Role",     v: project.role },
+                { k: "Timeline", v: project.timeline },
+              ].map((m) => (
+                <div key={m.k} className="glass rounded-2xl p-3">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{m.k}</div>
+                  <div className="text-sm font-medium mt-1">{m.v}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 space-y-5">
+              <div>
+                <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">The Challenge</div>
+                <p className="text-foreground/90 leading-relaxed">{project.challenge}</p>
+              </div>
+              <div>
+                <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">The Solution</div>
+                <p className="text-foreground/90 leading-relaxed">{project.solution}</p>
+              </div>
+              <div>
+                <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">Results</div>
+                <ul className="space-y-2">
+                  {project.results.map((r) => (
+                    <li key={r} className="flex items-start gap-2">
+                      <CheckCircle2 size={16} className="text-primary shrink-0 mt-0.5" />
+                      <span className="text-foreground/90">{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
             <a
               href="#contact"
-              className="block glass glass-border-glow rounded-[32px] p-4 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.4)]"
+              onClick={onClose}
+              className="mt-8 w-full inline-flex items-center justify-center gap-2 rounded-full gradient-brand px-6 py-3.5 text-sm font-medium text-white magnetic-btn shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.6)]"
             >
-              <div
-                className="aspect-[16/10] rounded-3xl overflow-hidden relative mb-5 ring-1 ring-white/60"
-                style={{ background: `linear-gradient(135deg, ${p.color}22, #22D3EE22)` }}
-              >
-                {p.type === "image" ? (
-                  <img
-                    src={p.media}
-                    alt={p.title}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <video
-                    src={p.media}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute top-3 left-3">
-                  <div className="glass-strong rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest">{p.tag}</div>
-                </div>
-                <div
-                  className="absolute -inset-10 rounded-full blur-3xl opacity-30 pointer-events-none"
-                  style={{ background: p.color }}
-                />
-              </div>
-              <div className="flex items-start justify-between gap-3 px-2 pb-2">
-                <div>
-                  <div className="font-display text-xl font-semibold">{p.title}</div>
-                  <div className="text-sm text-muted-foreground mt-1">{p.desc}</div>
-                </div>
-                <div className="h-9 w-9 rounded-full glass flex items-center justify-center shrink-0 group-hover:gradient-brand group-hover:text-white transition-all">
-                  <ArrowUpRight size={16} />
-                </div>
-              </div>
+              Start a project like this <ArrowRight size={16} />
             </a>
-          </Floaty>
+          </motion.div>
         </motion.div>
-      ))}
-    </div>
-  </Section>
-);
+      )}
+    </AnimatePresence>
+  );
+};
+
+const Work = () => {
+  // Which project's case study is currently open (null = closed).
+  const [openProject, setOpenProject] = useState<Project | null>(null);
+  return (
+    <Section
+      id="work"
+      eyebrow="Work"
+      title={<>Selected <span className="gradient-text">signature</span> projects.</>}
+      kicker="Real brands, real launches — each one engineered where luxury design meets measurable performance."
+    >
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((p, i) => (
+          <motion.div
+            key={p.title}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ ...spring, delay: i * 0.06 }}
+            className="group relative"
+          >
+            <Floaty amount={5} duration={7 + (i % 3)} delay={i * 0.25}>
+              <div className="block glass glass-border-glow rounded-[32px] p-4 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.4)]">
+                <button
+                  type="button"
+                  onClick={() => setOpenProject(p)}
+                  className="block w-full text-left"
+                  aria-label={`Open ${p.title} case study`}
+                >
+                  <div
+                    className="aspect-[16/10] rounded-3xl overflow-hidden relative mb-5 ring-1 ring-white/60"
+                    style={{ background: `linear-gradient(135deg, ${p.color}22, #22D3EE22)` }}
+                  >
+                    {p.type === "image" ? (
+                      <img src={p.media} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    ) : (
+                      <video src={p.media} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute top-3 left-3">
+                      <div className="glass-strong rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest">{p.tag}</div>
+                    </div>
+                    <div className="absolute -inset-10 rounded-full blur-3xl opacity-30 pointer-events-none" style={{ background: p.color }} />
+                  </div>
+                </button>
+                <div className="flex items-start justify-between gap-3 px-2 pb-2">
+                  <div>
+                    <div className="font-display text-xl font-semibold">{p.title}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{p.desc}</div>
+                  </div>
+                  {/* Arrow — opens the liquid glass case-study modal. */}
+                  <button
+                    type="button"
+                    onClick={() => setOpenProject(p)}
+                    aria-label={`View ${p.title} case study`}
+                    className="h-9 w-9 rounded-full glass flex items-center justify-center shrink-0 hover:gradient-brand hover:text-white transition-all"
+                  >
+                    <ArrowUpRight size={16} />
+                  </button>
+                </div>
+              </div>
+            </Floaty>
+          </motion.div>
+        ))}
+      </div>
+      <CaseStudyModal project={openProject} onClose={() => setOpenProject(null)} />
+    </Section>
+  );
+};
+
 
 /* ---------------- CONTACT ---------------- */
 
