@@ -214,7 +214,9 @@ Purpose of this file:
   Add / edit skills ................... `skills` array in Index.tsx
   Add / edit journey milestones ....... `journey` array in Index.tsx
   Add / edit portfolio projects ....... `projects` array in Index.tsx
+  Add / edit case study copy .......... `projects` array (challenge/solution/results)
   Add / edit testimonials ............. `testimonials` array in Index.tsx
+  Add / edit certificates ............. `certificates` array in Index.tsx
   Change contact email destination .... CONTACT_EMAIL const in Contact
   Change brand colors / gradients ..... src/index.css  (:root section)
   Change fonts ........................ index.html <link> + index.css
