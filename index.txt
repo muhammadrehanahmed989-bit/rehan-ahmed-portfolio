@@ -170,6 +170,25 @@ Purpose of this file:
     once — after that, all future submissions arrive automatically
     in his Gmail inbox with no further setup.
 
+  FEEDBACK FORM (Testimonials section → LeaveFeedback):
+    Uses the same FormSubmit endpoint. Every submission is
+    emailed to Rehan for approval before it is manually added
+    to the `testimonials` array. Fields: name, country, role,
+    rating (1–5 stars), quote.
+
+  WORK CASE STUDY MODAL (Work section → CaseStudyModal):
+    Clicking any project card's arrow (or the media itself)
+    opens a liquid-glass modal with client, role, timeline,
+    challenge, solution and result bullets. Closes on ESC,
+    backdrop click, or the × button. Same behavior on laptop
+    and mobile.
+
+  CERTIFICATES CAROUSEL (Certificates section):
+    Auto cross-fades through 4 certificates every 4.5 seconds
+    using AnimatePresence. Dots and chip buttons let the user
+    jump to any specific certificate.
+
+
 ------------------------------------------------------------------------
  8. STYLING CONVENTIONS
 ------------------------------------------------------------------------
