@@ -90,14 +90,10 @@ const Floaty: React.FC<React.PropsWithChildren<{ delay?: number; amount?: number
 type Orb = { label: string; href: string; icon: React.ComponentType<any>; color: string };
 
 const orbitIcons: Orb[] = [
-  { label: "GitHub",     href: "https://github.com/muhammadrehanahmed989-bit",             icon: Github,    color: "#111827" },
-  { label: "LinkedIn",   href: "https://www.linkedin.com/",                                icon: Linkedin,  color: "#0A66C2" },
-  { label: "Meta Ads",   href: "https://www.facebook.com/business/ads",                    icon: Target,    color: "#1877F2" },
-  { label: "Google Ads", href: "https://ads.google.com/",                                  icon: BarChart3, color: "#34A853" },
-  { label: "Gmail",      href: "mailto:muhammadrehanahmed989@gmail.com",                   icon: Mail,      color: "#EA4335" },
-  { label: "Figma",      href: "https://www.figma.com/",                                   icon: Figma,     color: "#A259FF" },
-  { label: "AI",         href: "https://openai.com/",                                      icon: Brain,     color: "#8B5CF6" },
-  { label: "Instagram",  href: "https://www.instagram.com/",                               icon: Instagram, color: "#E1306C" },
+  { label: "AI",     href: "#skills", icon: Brain,   color: "#8B5CF6" },
+  { label: "Design", href: "#work",   icon: Palette, color: "#EC4899" },
+  { label: "Growth", href: "#work",   icon: Rocket,  color: "#22D3EE" },
+  { label: "Web",    href: "#work",   icon: Code2,   color: "#60A5FA" },
 ];
 
 const Hero = () => {
