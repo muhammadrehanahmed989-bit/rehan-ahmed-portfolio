@@ -202,31 +202,33 @@ const Hero = () => {
             </Floaty>
 
 
-            {/* Orbiting functional icons — single evenly spaced ring */}
+            {/* Orbiting planets — AI · Design · Growth · Web */}
             {mounted && orbitIcons.map((c, i) => {
-              const duration = 42;
+              const duration = 38;
               const angleOffset = (i / orbitIcons.length) * duration;
               return (
                 <div
                   key={c.label}
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                   style={{
-                    ["--r" as any]: "min(240px, 42vw)",
+                    ["--r" as any]: "min(240px, 44vw)",
                     animation: `orbit ${duration}s linear infinite`,
                     animationDelay: `-${angleOffset}s`,
                   }}
                 >
-                  <Floaty amount={4} duration={4 + (i % 3)} delay={i * 0.15}>
+                  <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.2}>
                     <a
                       href={c.href}
-                      target={c.href.startsWith("mailto:") ? undefined : "_blank"}
-                      rel="noopener noreferrer"
                       aria-label={c.label}
-                      className="group relative flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 rounded-2xl glass glass-border-glow hover:scale-125 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_-10px_hsl(271_91%_60%/0.35)]"
-                      style={{ color: c.color }}
+                      className="group relative inline-flex items-center gap-2 rounded-full glass glass-border-glow px-3.5 py-2 sm:px-4 sm:py-2.5 hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 shadow-[0_14px_40px_-12px_hsl(271_91%_60%/0.45)]"
                     >
-                      <c.icon size={18} />
-                      <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-mono uppercase tracking-wider whitespace-nowrap glass rounded-full px-2 py-1 text-foreground">
+                      <span
+                        className="flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-full text-white shadow-md"
+                        style={{ background: `linear-gradient(135deg, ${c.color}, ${c.color}cc)` }}
+                      >
+                        <c.icon size={14} />
+                      </span>
+                      <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-foreground pr-1">
                         {c.label}
                       </span>
                     </a>
