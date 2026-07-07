@@ -85,66 +85,122 @@ const Floaty: React.FC<React.PropsWithChildren<{ delay?: number; amount?: number
   );
 };
 
-/* ---------------- HERO with functional orbiting icons ---------------- */
+/* ---------------- HERO — Bento dashboard ---------------- */
 
-type Orb = { label: string; href: string; icon: React.ComponentType<any>; color: string };
+type Social = { label: string; href: string; icon: React.ComponentType<any>; color: string };
 
-const orbitIcons: Orb[] = [
-  { label: "AI",     href: "#skills", icon: Brain,   color: "#8B5CF6" },
-  { label: "Design", href: "#work",   icon: Palette, color: "#EC4899" },
-  { label: "Growth", href: "#work",   icon: Rocket,  color: "#22D3EE" },
-  { label: "Web",    href: "#work",   icon: Code2,   color: "#60A5FA" },
+const socials: Social[] = [
+  { label: "Instagram", href: "https://instagram.com",                     icon: Instagram, color: "#E1306C" },
+  { label: "LinkedIn",  href: "https://linkedin.com",                      icon: Linkedin,  color: "#0A66C2" },
+  { label: "GitHub",    href: "https://github.com",                        icon: Github,    color: "#111827" },
+  { label: "Figma",     href: "https://figma.com",                         icon: Figma,     color: "#A259FF" },
+  { label: "Email",     href: "mailto:muhammadrehanahmed989@gmail.com",    icon: Mail,      color: "#EA4335" },
 ];
 
+type Bento = {
+  icon: React.ComponentType<any>;
+  title: string;
+  desc: string;
+  color: string;
+  tint: string;
+};
+
+const bentos: Bento[] = [
+  { icon: Target,   title: "Meta Ads",       desc: "ROAS-driven funnels & creative testing.", color: "#1877F2", tint: "from-sky/30 to-purple/20" },
+  { icon: Bot,      title: "AI Automation",  desc: "Custom pipelines, agents & workflows.",   color: "#8B5CF6", tint: "from-purple/30 to-pink/20" },
+  { icon: Figma,    title: "UI / UX",        desc: "Product interfaces with cinematic feel.", color: "#EC4899", tint: "from-pink/30 to-cyan/20" },
+  { icon: Code2,    title: "React",          desc: "Production-grade, type-safe front-ends.", color: "#22D3EE", tint: "from-cyan/30 to-sky/20" },
+];
+
+const HeroCard: React.FC<React.PropsWithChildren<{ className?: string; delay?: number; float?: number }>> = ({
+  children, className = "", delay = 0, float = 6,
+}) => {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ ...spring, delay }}
+      whileHover={reduce ? undefined : { y: -6, transition: { type: "spring", stiffness: 260, damping: 20 } }}
+      className={`group relative overflow-hidden glass glass-border-glow rounded-[28px] p-5 sm:p-6 shadow-[0_20px_60px_-30px_hsl(271_91%_60%/0.4)] ${className}`}
+      style={reduce ? undefined : { animation: `float-slow ${float}s ease-in-out infinite`, animationDelay: `-${delay * 2}s` }}
+    >
+      {/* moving inner gradient */}
+      <div
+        aria-hidden
+        className="absolute -inset-8 opacity-40 blur-3xl transition-opacity duration-500 group-hover:opacity-70 -z-10"
+        style={{ background: "conic-gradient(from 90deg at 50% 50%, hsl(271 91% 78% / 0.5), hsl(205 92% 78% / 0.5), hsl(330 84% 82% / 0.5), hsl(187 85% 78% / 0.5), hsl(271 91% 78% / 0.5))" }}
+      />
+      {/* hover border glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ boxShadow: "0 0 0 1px hsl(271 91% 70% / 0.35), 0 30px 80px -30px hsl(271 91% 60% / 0.55)" }}
+      />
+      {children}
+    </motion.div>
+  );
+};
+
 const Hero = () => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const reduce = useReducedMotion();
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+    const y = ((e.clientY - r.top) / r.height - 0.5) * 2;
+    setTilt({ x, y });
+  };
+  const onLeave = () => setTilt({ x: 0, y: 0 });
 
   return (
-    <section id="home" className="relative min-h-[100dvh] flex items-center pt-32 pb-16">
+    <section id="home" className="relative min-h-[100dvh] flex items-center pt-32 pb-20">
       <div className="container relative">
-        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center">
-          {/* Left */}
-          <div className="relative">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, ...spring }}>
+        <div className="grid lg:grid-cols-[minmax(0,600px)_1fr] gap-14 lg:gap-20 items-center">
+          {/* LEFT — content */}
+          <div className="relative order-2 lg:order-1">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, ...spring }}>
               <div className="inline-flex items-center gap-2.5 glass glass-border-glow rounded-full pl-1.5 pr-4 py-1.5 text-xs font-mono uppercase tracking-[0.22em]">
                 <span className="relative flex items-center justify-center h-6 w-6 rounded-full gradient-brand text-white">
                   <Sparkles size={12} />
                 </span>
                 Crafting Signature Digital Experiences
               </div>
-
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, ...spring }}
-              className="font-display font-semibold text-6xl sm:text-7xl lg:text-[6.5rem] leading-[0.95] tracking-[-0.03em] mt-6"
+              transition={{ delay: 0.15, ...spring }}
+              className="font-display font-semibold text-[2.75rem] sm:text-6xl lg:text-[4.5rem] xl:text-[5rem] leading-[0.98] tracking-[-0.03em] mt-6 text-balance"
             >
-              <span className="block text-foreground">Muhammad</span>
+              <span className="block text-foreground">Building</span>
               <span className="block">
-                <span className="gradient-text">Rehan </span>
-                <span className="text-foreground">Ahmed</span>
+                <span className="gradient-text">AI-powered</span>{" "}
+                <span className="text-foreground">brands</span>
               </span>
+              <span className="block text-foreground">that convert.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, ...spring }}
-              className="mt-7 max-w-xl text-lg sm:text-xl text-muted-foreground text-balance"
+              transition={{ delay: 0.28, ...spring }}
+              className="mt-7 max-w-[560px] text-base sm:text-lg lg:text-xl text-muted-foreground text-balance leading-relaxed"
             >
-              Digital Marketing Specialist, AI Creator & Creative Developer engineering
-              <span className="text-foreground"> cinematic brand experiences </span>
-              and high-performance Meta &amp; Google Ads that scale.
+              I'm <span className="text-foreground font-medium">Muhammad Rehan Ahmed</span> — a creative developer blending
+              <span className="text-foreground"> AI automation</span>, high-performance
+              <span className="text-foreground"> Meta &amp; Google Ads</span> and product design into cinematic experiences that scale.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, ...spring }}
-              className="mt-9 flex flex-wrap items-center gap-4"
+              transition={{ delay: 0.4, ...spring }}
+              className="mt-8 flex flex-wrap items-center gap-3"
             >
               <a href="#work" className="group relative inline-flex items-center gap-2 rounded-full gradient-brand px-6 py-3.5 text-sm font-medium text-white magnetic-btn shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.6)]">
                 Explore my work
@@ -158,84 +214,97 @@ const Hero = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.65, ...spring }}
-              className="mt-14 grid grid-cols-3 gap-4 max-w-lg"
+              transition={{ delay: 0.52, ...spring }}
+              className="mt-8 flex flex-wrap gap-2.5"
             >
-              {[
-                { k: "6+", v: "Years crafting" },
-                { k: "80+", v: "Brands scaled" },
-                { k: "$4M+", v: "Ad spend managed" },
-              ].map((s, i) => (
-                <Floaty key={s.k} amount={5} duration={6 + i} delay={i * 0.3}>
-                  <div className="glass rounded-3xl p-4">
-                    <div className="font-display text-2xl gradient-text">{s.k}</div>
-                    <div className="text-[11px] uppercase tracking-widest text-muted-foreground mt-1">{s.v}</div>
-                  </div>
-                </Floaty>
+              {["Meta Ads", "Google Ads", "AI Automation", "UI / UX", "React", "Brand Systems"].map((t) => (
+                <span key={t} className="glass rounded-full px-3.5 py-1.5 text-xs sm:text-sm text-foreground/80 hover:-translate-y-0.5 hover:bg-white/80 transition-all">
+                  {t}
+                </span>
               ))}
             </motion.div>
           </div>
 
-          {/* Right — portrait + orbiting functional icons */}
-          <div className="relative mx-auto w-full max-w-[560px] aspect-square">
-            {/* Aurora glow behind */}
-            <div className="absolute inset-6 rounded-full bg-purple/30 blur-3xl animate-glow-pulse" />
-            <div className="absolute inset-10 rounded-full bg-cyan/25 blur-3xl" />
+          {/* RIGHT — Bento dashboard */}
+          <div
+            className="relative order-1 lg:order-2 w-full max-w-[560px] mx-auto"
+            onMouseMove={onMove}
+            onMouseLeave={onLeave}
+            style={{ perspective: 1200 }}
+          >
+            {/* soft radial glow */}
+            <div aria-hidden className="absolute -inset-10 -z-10 rounded-[48px] bg-purple/20 blur-3xl animate-glow-pulse" />
+            <div aria-hidden className="absolute -inset-4 -z-10 rounded-[48px] bg-sky/15 blur-3xl" />
 
-            {/* Rotating rings */}
-            <div className="absolute inset-4 rounded-full border border-purple/25 animate-ring-spin" />
-            <div className="absolute inset-16 rounded-full border border-sky/25 animate-ring-spin-rev" />
-            <div className="absolute inset-28 rounded-full border border-pink/20 animate-ring-spin" style={{ animationDuration: "60s" }} />
-
-            {/* Portrait */}
-            <Floaty amount={10} duration={8} className="absolute inset-[18%]">
-              <div className="relative h-full w-full rounded-full overflow-hidden glass-strong glass-border-glow shadow-[0_40px_100px_-30px_hsl(271_91%_60%/0.5)]">
-                <img
-                  src={portraitAsset.url}
-                  alt="Portrait of Muhammad Rehan Ahmed"
-                  width={832}
-                  height={1024}
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 rounded-full ring-1 ring-white/60" />
-              </div>
-            </Floaty>
-
-
-            {/* Orbiting planets — AI · Design · Growth · Web */}
-            {mounted && orbitIcons.map((c, i) => {
-              const duration = 38;
-              const angleOffset = (i / orbitIcons.length) * duration;
-              return (
-                <div
-                  key={c.label}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                    ["--r" as any]: "min(240px, 44vw)",
-                    animation: `orbit ${duration}s linear infinite`,
-                    animationDelay: `-${angleOffset}s`,
-                  }}
-                >
-                  <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.2}>
-                    <a
-                      href={c.href}
-                      aria-label={c.label}
-                      className="group relative inline-flex items-center gap-2 rounded-full glass glass-border-glow px-3.5 py-2 sm:px-4 sm:py-2.5 hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 shadow-[0_14px_40px_-12px_hsl(271_91%_60%/0.45)]"
-                    >
-                      <span
-                        className="flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-full text-white shadow-md"
-                        style={{ background: `linear-gradient(135deg, ${c.color}, ${c.color}cc)` }}
-                      >
-                        <c.icon size={14} />
-                      </span>
-                      <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-foreground pr-1">
-                        {c.label}
-                      </span>
-                    </a>
-                  </Floaty>
+            <motion.div
+              className="grid grid-cols-2 gap-4 sm:gap-5"
+              style={reduce ? undefined : {
+                transform: `rotateX(${tilt.y * -3}deg) rotateY(${tilt.x * 3}deg)`,
+                transformStyle: "preserve-3d",
+                transition: "transform 300ms cubic-bezier(0.22, 1, 0.36, 1)",
+              }}
+            >
+              {/* PROFILE CARD — spans 2 cols */}
+              <HeroCard className="col-span-2 !p-6 sm:!p-7" delay={0.05} float={7}>
+                <div className="flex items-center gap-5">
+                  <div className="relative shrink-0">
+                    <div aria-hidden className="absolute -inset-1.5 rounded-full gradient-brand opacity-70 blur-md" />
+                    <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden ring-2 ring-white/90 shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.5)]">
+                      <img src={portraitAsset.url} alt="Portrait of Muhammad Rehan Ahmed" className="h-full w-full object-cover" />
+                    </div>
+                    <span className="absolute -bottom-1 -right-1 flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest shadow-md">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Available
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-display text-xl sm:text-2xl font-semibold leading-tight">
+                      <span className="gradient-text">Rehan</span> <span className="text-foreground">Ahmed</span>
+                    </div>
+                    <div className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.18em] text-muted-foreground mt-1">
+                      AI · Ads · Product
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {socials.map((s, i) => (
+                        <motion.a
+                          key={s.label}
+                          href={s.href}
+                          target={s.href.startsWith("http") ? "_blank" : undefined}
+                          rel="noreferrer"
+                          aria-label={s.label}
+                          initial={{ opacity: 0, scale: 0.6 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ ...spring, delay: 0.3 + i * 0.06 }}
+                          whileHover={{ y: -3, scale: 1.1 }}
+                          className="relative flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-full text-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] backdrop-blur-md ring-1 ring-white/60"
+                          style={{
+                            background: `linear-gradient(135deg, ${s.color}, ${s.color}cc)`,
+                          }}
+                        >
+                          <s.icon size={14} strokeWidth={2.2} />
+                          <span aria-hidden className="absolute inset-0 rounded-full bg-white/30 opacity-0 hover:opacity-100 transition-opacity" />
+                        </motion.a>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              );
-            })}
+              </HeroCard>
+
+              {/* Feature cards */}
+              {bentos.map((b, i) => (
+                <HeroCard key={b.title} delay={0.15 + i * 0.08} float={6 + (i % 3)}>
+                  <div
+                    className="h-10 w-10 rounded-2xl flex items-center justify-center mb-3"
+                    style={{ background: `${b.color}1a`, color: b.color, boxShadow: `0 0 24px ${b.color}55` }}
+                  >
+                    <b.icon size={18} />
+                  </div>
+                  <div className="font-display text-base sm:text-lg font-semibold text-foreground">{b.title}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground mt-1 leading-snug">{b.desc}</div>
+                </HeroCard>
+              ))}
+            </motion.div>
           </div>
         </div>
       </div>
