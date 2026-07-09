@@ -151,7 +151,7 @@ const Hero = () => {
       <div className="container relative">
         <div className="grid lg:grid-cols-[minmax(0,600px)_1fr] gap-14 lg:gap-20 items-center">
           {/* LEFT — content */}
-          <div className="relative order-2 lg:order-1">
+          <div className="relative">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, ...spring }}>
               <div className="inline-flex items-center gap-2.5 glass glass-border-glow rounded-full pl-1.5 pr-4 py-1.5 text-xs font-mono uppercase tracking-[0.22em]">
                 <span className="relative flex items-center justify-center h-6 w-6 rounded-full gradient-brand text-white">
@@ -216,7 +216,7 @@ const Hero = () => {
           </div>
 
           {/* RIGHT — Portrait with orbiting social icons */}
-          <div className="relative order-1 lg:order-2 w-full mx-auto flex items-center justify-center">
+          <div className="relative w-full mx-auto flex items-center justify-center">
             <div className="relative aspect-square w-[320px] sm:w-[420px] lg:w-[500px] max-w-full">
               {/* Aurora glow */}
               <div aria-hidden className="absolute inset-8 rounded-full bg-purple/25 blur-3xl animate-glow-pulse" />
