@@ -216,7 +216,7 @@ const Hero = () => {
           </div>
 
           {/* RIGHT — Portrait with orbiting social icons */}
-          <div className="relative order-1 lg:order-2 w-full mx-auto flex items-center justify-center">
+          <div className="relative w-full mx-auto flex items-center justify-center">
             <div className="relative aspect-square w-[320px] sm:w-[420px] lg:w-[500px] max-w-full">
               {/* Aurora glow */}
               <div aria-hidden className="absolute inset-8 rounded-full bg-purple/25 blur-3xl animate-glow-pulse" />
