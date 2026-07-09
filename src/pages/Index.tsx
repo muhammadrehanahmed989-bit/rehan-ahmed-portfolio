@@ -145,16 +145,6 @@ const HeroCard: React.FC<React.PropsWithChildren<{ className?: string; delay?: n
 
 const Hero = () => {
   const reduce = useReducedMotion();
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reduce) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width - 0.5) * 2;
-    const y = ((e.clientY - r.top) / r.height - 0.5) * 2;
-    setTilt({ x, y });
-  };
-  const onLeave = () => setTilt({ x: 0, y: 0 });
 
   return (
     <section id="home" className="relative min-h-[100dvh] flex items-center pt-32 pb-20">
@@ -225,86 +215,85 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          {/* RIGHT — Bento dashboard */}
-          <div
-            className="relative order-1 lg:order-2 w-full max-w-[560px] mx-auto"
-            onMouseMove={onMove}
-            onMouseLeave={onLeave}
-            style={{ perspective: 1200 }}
-          >
-            {/* soft radial glow */}
-            <div aria-hidden className="absolute -inset-10 -z-10 rounded-[48px] bg-purple/20 blur-3xl animate-glow-pulse" />
-            <div aria-hidden className="absolute -inset-4 -z-10 rounded-[48px] bg-sky/15 blur-3xl" />
+          {/* RIGHT — Portrait with orbiting social icons */}
+          <div className="relative order-1 lg:order-2 w-full mx-auto flex items-center justify-center">
+            <div className="relative aspect-square w-[320px] sm:w-[420px] lg:w-[500px] max-w-full">
+              {/* Aurora glow */}
+              <div aria-hidden className="absolute inset-8 rounded-full bg-purple/25 blur-3xl animate-glow-pulse" />
+              <div aria-hidden className="absolute inset-16 rounded-full bg-sky/20 blur-3xl" />
 
-            <motion.div
-              className="grid grid-cols-2 gap-4 sm:gap-5"
-              style={reduce ? undefined : {
-                transform: `rotateX(${tilt.y * -3}deg) rotateY(${tilt.x * 3}deg)`,
-                transformStyle: "preserve-3d",
-                transition: "transform 300ms cubic-bezier(0.22, 1, 0.36, 1)",
-              }}
-            >
-              {/* PROFILE CARD — spans 2 cols */}
-              <HeroCard className="col-span-2 !p-6 sm:!p-7" delay={0.05} float={7}>
-                <div className="flex items-center gap-5">
-                  <div className="relative shrink-0">
-                    <div aria-hidden className="absolute -inset-1.5 rounded-full gradient-brand opacity-70 blur-md" />
-                    <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden ring-2 ring-white/90 shadow-[0_20px_50px_-15px_hsl(271_91%_60%/0.5)]">
-                      <img src={portraitAsset.url} alt="Portrait of Muhammad Rehan Ahmed" className="h-full w-full object-cover" />
-                    </div>
-                    <span className="absolute -bottom-1 -right-1 flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest shadow-md">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      Available
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-display text-xl sm:text-2xl font-semibold leading-tight">
-                      <span className="gradient-text">Rehan</span> <span className="text-foreground">Ahmed</span>
-                    </div>
-                    <div className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.18em] text-muted-foreground mt-1">
-                      AI · Ads · Product
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {socials.map((s, i) => (
-                        <motion.a
-                          key={s.label}
-                          href={s.href}
-                          target={s.href.startsWith("http") ? "_blank" : undefined}
-                          rel="noreferrer"
-                          aria-label={s.label}
-                          initial={{ opacity: 0, scale: 0.6 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ ...spring, delay: 0.3 + i * 0.06 }}
-                          whileHover={{ y: -3, scale: 1.1 }}
-                          className="relative flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-full text-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] backdrop-blur-md ring-1 ring-white/60"
-                          style={{
-                            background: `linear-gradient(135deg, ${s.color}, ${s.color}cc)`,
-                          }}
-                        >
-                          <s.icon size={14} strokeWidth={2.2} />
-                          <span aria-hidden className="absolute inset-0 rounded-full bg-white/30 opacity-0 hover:opacity-100 transition-opacity" />
-                        </motion.a>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </HeroCard>
+              {/* Rotating dashed rings */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ ...spring, delay: 0.2 }}
+                className="absolute inset-0"
+              >
+                <div className="absolute inset-2 rounded-full border border-dashed border-purple/30 animate-ring-spin" />
+                <div className="absolute inset-8 rounded-full border border-dashed border-sky/25 animate-ring-spin-rev" />
+              </motion.div>
 
-              {/* Feature cards */}
-              {bentos.map((b, i) => (
-                <HeroCard key={b.title} delay={0.15 + i * 0.08} float={6 + (i % 3)}>
-                  <div
-                    className="h-10 w-10 rounded-2xl flex items-center justify-center mb-3"
-                    style={{ background: `${b.color}1a`, color: b.color, boxShadow: `0 0 24px ${b.color}55` }}
-                  >
-                    <b.icon size={18} />
+              {/* Portrait — center */}
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ ...spring, delay: 0.1 }}
+                className="absolute inset-[16%] rounded-full overflow-hidden ring-4 ring-white/90 shadow-[0_30px_80px_-20px_hsl(271_91%_55%/0.55)]"
+              >
+                <div aria-hidden className="absolute -inset-2 rounded-full gradient-brand opacity-70 blur-md -z-10" />
+                <img
+                  src={portraitAsset.url}
+                  alt="Portrait of Muhammad Rehan Ahmed"
+                  className="h-full w-full object-cover"
+                />
+              </motion.div>
+
+              {/* Available badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ ...spring, delay: 0.6 }}
+                className="absolute left-1/2 -translate-x-1/2 -bottom-2 flex items-center gap-1.5 rounded-full glass-strong px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest shadow-lg z-20"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Available
+              </motion.div>
+
+              {/* Orbiting social icons */}
+              {socials.map((s, i) => {
+                const duration = 28;
+                const angleOffset = (i / socials.length) * duration;
+                return (
+                  <div key={s.label} className="absolute top-1/2 left-1/2 h-0 w-0 pointer-events-none">
+                    <div
+                      className="absolute"
+                      style={{
+                        ["--r" as any]: "min(220px, 46vw)",
+                        animation: reduce ? undefined : `orbit ${duration}s linear infinite`,
+                        animationDelay: `-${angleOffset}s`,
+                      }}
+                    >
+                      <motion.a
+                        href={s.href}
+                        target={s.href.startsWith("http") ? "_blank" : undefined}
+                        rel="noreferrer"
+                        aria-label={s.label}
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ ...spring, delay: 0.4 + i * 0.08 }}
+                        whileHover={{ scale: 1.2 }}
+                        className="pointer-events-auto -translate-x-1/2 -translate-y-1/2 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 rounded-full text-white ring-1 ring-white/70 backdrop-blur-md shadow-[0_10px_30px_-8px_rgba(0,0,0,0.35)]"
+                        style={{
+                          background: `linear-gradient(135deg, ${s.color}, ${s.color}cc)`,
+                        }}
+                      >
+                        <s.icon size={18} strokeWidth={2.2} />
+                      </motion.a>
+                    </div>
                   </div>
-                  <div className="font-display text-base sm:text-lg font-semibold text-foreground">{b.title}</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground mt-1 leading-snug">{b.desc}</div>
-                </HeroCard>
-              ))}
-            </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -312,117 +301,146 @@ const Hero = () => {
   );
 };
 
-/* ---------------- ABOUT ---------------- */
+/* ---------------- ABOUT — Editorial split with stats & manifesto ---------------- */
 
-const pillars = [
-  { icon: Rocket,  label: "Growth",  desc: "Meta & Google Ads engineered for ROAS", color: "#8B5CF6" },
-  { icon: Palette, label: "Design",  desc: "UI/UX with cinematic polish",           color: "#EC4899" },
-  { icon: Cpu,     label: "AI",      desc: "Automation & creative pipelines",       color: "#22D3EE" },
-  { icon: Code2,   label: "Build",   desc: "Production-grade experiences",          color: "#60A5FA" },
+const aboutStats = [
+  { value: "6+",   label: "Years crafting",     sub: "Brands, ads, AI" },
+  { value: "80+",  label: "Brands scaled",      sub: "US · UAE · EU · PK" },
+  { value: "$4M+", label: "Ad spend managed",   sub: "Meta · Google" },
+  { value: "4.6×", label: "Avg. peak ROAS",     sub: "Signature funnels" },
+];
+
+const aboutChapters = [
+  { n: "01", icon: Rocket,  title: "Strategy",  desc: "I map the funnel end-to-end — offer, hook, creative, audience, LTV — before a single dollar is spent." },
+  { n: "02", icon: Palette, title: "Craft",     desc: "Every asset earns its place. Typography, motion and composition tuned for luxury conversion." },
+  { n: "03", icon: Brain,   title: "AI Systems", desc: "Automation pipelines and agents that produce, personalise and iterate creative at scale." },
+  { n: "04", icon: Code2,   title: "Ship",       desc: "Production-grade React front-ends and dashboards built to feel effortless and load instantly." },
 ];
 
 const About = () => (
-  <Section
-    id="about"
-    eyebrow="About"
-    title={<>A rare hybrid of <span className="gradient-text">strategy, art & code.</span></>}
-  >
-    <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 items-start">
-      <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-        <p>
-          I'm <span className="text-foreground font-medium">Rehan</span> — a multidisciplinary creator obsessed with the intersection
-          of storytelling, technology and performance marketing. For the past six years I've helped brands
-          break through with campaigns that feel like art and convert like a spreadsheet.
-        </p>
-        <p>
-          I lead <span className="text-foreground font-medium">Meta &amp; Google Ads systems</span>, direct AI-generated visuals,
-          design product interfaces and ship the code myself when the vision demands it. My work sits where
-          <span className="text-foreground font-medium"> luxury branding meets machine intelligence.</span>
-        </p>
-        <div className="flex flex-wrap gap-3 pt-2">
-          {["Meta Ads", "Google Ads", "Creative Direction", "AI Workflows", "UI/UX", "Brand Systems", "React"].map((t) => (
-            <span key={t} className="glass rounded-full px-4 py-1.5 text-sm text-foreground/80">{t}</span>
-          ))}
-        </div>
+  <Section id="about" className="!py-28 sm:!py-36">
+    <div className="grid lg:grid-cols-12 gap-14 lg:gap-20 items-start">
+      {/* LEFT — Editorial manifesto */}
+      <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={spring}
+          className="inline-flex items-center gap-2 glass rounded-full px-3 py-1 text-xs font-mono uppercase tracking-[0.24em] text-muted-foreground"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_10px_hsl(var(--primary))]" />
+          Manifesto · About
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ ...spring, delay: 0.08 }}
+          className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.02] text-balance"
+        >
+          I build brands where <span className="gradient-text">taste meets machine</span> intelligence.
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ ...spring, delay: 0.16 }}
+          className="text-lg text-muted-foreground leading-relaxed text-balance"
+        >
+          For six years I've operated the full stack of modern growth — from the strategy deck
+          to the ad account to the production repo. One operator, one system, no hand-offs.
+        </motion.p>
+
+        {/* Signature block */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ ...spring, delay: 0.22 }}
+          className="glass glass-border-glow rounded-3xl p-5 flex items-center gap-4"
+        >
+          <div className="relative h-14 w-14 shrink-0 rounded-full overflow-hidden ring-2 ring-white/90">
+            <img src={portraitAsset.url} alt="Rehan" className="h-full w-full object-cover" />
+          </div>
+          <div className="min-w-0">
+            <div className="font-display text-lg font-semibold">
+              <span className="gradient-text">Muhammad Rehan</span> Ahmed
+            </div>
+            <div className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mt-0.5 flex items-center gap-1.5">
+              <MapPin size={11} /> Faisalabad · Remote worldwide
+            </div>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Revolving pillars — one layout, responsive */}
-      <div className="relative aspect-square w-full max-w-[520px] mx-auto">
-        {/* Aurora glow */}
-        <div className="absolute inset-6 rounded-full bg-purple/20 blur-3xl animate-glow-pulse" />
-        <div className="absolute inset-16 rounded-full bg-cyan/15 blur-3xl" />
-
-        {/* Rotating rings */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.7 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...spring, delay: 0.1 }}
-          className="absolute inset-0"
-        >
-          <div className="absolute inset-4 sm:inset-8 rounded-full border border-purple/25 animate-ring-spin" />
-          <div className="absolute inset-14 sm:inset-20 rounded-full border border-sky/25 animate-ring-spin-rev" />
-          <div className="absolute inset-24 sm:inset-32 rounded-full border border-pink/20 animate-ring-spin" style={{ animationDuration: "60s" }} />
-        </motion.div>
-
-        {/* Center — Rehan Ahmed */}
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ ...spring, delay: 0.15 }}
-          className="absolute inset-0 flex items-center justify-center z-10"
-        >
-          <Floaty>
-            <div className="glass-strong glass-border-glow rounded-full h-28 w-28 sm:h-36 sm:w-36 flex flex-col items-center justify-center animate-glow-pulse">
-              <span className="font-display text-xl sm:text-2xl gradient-text font-semibold">Rehan</span>
-              <span className="font-display text-sm sm:text-base text-foreground/80 -mt-0.5">Ahmed</span>
-              <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Operator</span>
-            </div>
-          </Floaty>
-        </motion.div>
-
-        {/* Revolving pillar cards — centering wrapper stays put, inner wrapper spins */}
-        {pillars.map((p, i) => {
-          const duration = 34;
-          const angleOffset = (i / pillars.length) * duration;
-          return (
-            <div
-              key={p.label}
-              className="absolute top-1/2 left-1/2 h-0 w-0 pointer-events-none"
+      {/* RIGHT — Stats + numbered chapters */}
+      <div className="lg:col-span-7 space-y-10">
+        {/* Stats bento */}
+        <div className="grid grid-cols-2 gap-4 sm:gap-5">
+          {aboutStats.map((s, i) => (
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 24, scale: 0.96 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ ...spring, delay: i * 0.08 }}
+              className={`relative glass glass-border-glow rounded-[28px] p-6 sm:p-7 overflow-hidden ${i % 2 === 0 ? "lg:translate-y-4" : ""}`}
             >
               <div
-                className="absolute"
-                style={{
-                  ["--r" as any]: "min(180px, 34vw)",
-                  animation: `orbit ${duration}s linear infinite`,
-                  animationDelay: `-${angleOffset}s`,
-                }}
-              >
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ ...spring, delay: 0.4 + i * 0.15 }}
-                  className="-translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-                >
-                  <Floaty amount={5} duration={5 + (i % 3)} delay={i * 0.25}>
-                    <div className="glass glass-border-glow rounded-3xl p-3 sm:p-4 w-28 sm:w-36 text-center hover:-translate-y-1 transition-transform">
-                      <div className="mx-auto h-9 w-9 sm:h-10 sm:w-10 rounded-2xl flex items-center justify-center mb-1.5 sm:mb-2"
-                        style={{ background: `${p.color}1a`, color: p.color, boxShadow: `0 0 24px ${p.color}55` }}>
-                        <p.icon size={18} />
-                      </div>
-                      <div className="font-display font-semibold text-xs sm:text-sm text-foreground">{p.label}</div>
-                      <div className="hidden sm:block text-[11px] text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
-                    </div>
-                  </Floaty>
-                </motion.div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+                aria-hidden
+                className="absolute -top-16 -right-16 h-40 w-40 rounded-full opacity-40 blur-3xl"
+                style={{ background: i % 2 === 0 ? "hsl(271 91% 78%)" : "hsl(205 92% 78%)" }}
+              />
+              <div className="font-display text-5xl sm:text-6xl font-semibold gradient-text leading-none">{s.value}</div>
+              <div className="mt-3 font-display text-base sm:text-lg text-foreground">{s.label}</div>
+              <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mt-1">{s.sub}</div>
+            </motion.div>
+          ))}
+        </div>
 
+        {/* Numbered chapters — vertical editorial list */}
+        <div className="relative pl-6 sm:pl-8">
+          {/* vertical gradient line */}
+          <div
+            aria-hidden
+            className="absolute left-0 top-2 bottom-2 w-px"
+            style={{ background: "linear-gradient(to bottom, hsl(271 91% 70%), hsl(205 92% 68%), hsl(330 84% 70% / 0))" }}
+          />
+          <div className="space-y-6">
+            {aboutChapters.map((c, i) => (
+              <motion.div
+                key={c.n}
+                initial={{ opacity: 0, x: 24 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ ...spring, delay: i * 0.1 }}
+                className="relative group"
+              >
+                {/* dot on line */}
+                <span
+                  aria-hidden
+                  className="absolute -left-6 sm:-left-8 top-6 h-3 w-3 rounded-full gradient-brand ring-4 ring-background shadow-[0_0_18px_hsl(271_91%_60%/0.6)]"
+                />
+                <div className="glass rounded-3xl p-5 sm:p-6 flex items-start gap-4 hover:-translate-y-0.5 hover:bg-white/80 transition-all">
+                  <div className="font-display text-3xl sm:text-4xl font-semibold gradient-text leading-none shrink-0">
+                    {c.n}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <c.icon size={16} className="text-primary" />
+                      <div className="font-display text-lg sm:text-xl font-semibold text-foreground">{c.title}</div>
+                    </div>
+                    <p className="mt-1.5 text-sm sm:text-base text-muted-foreground leading-relaxed">{c.desc}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   </Section>
 );
