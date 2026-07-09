@@ -505,27 +505,17 @@ const Skills = () => (
   </Section>
 );
 
-/* ---------------- CERTIFICATES (auto cross-fade slideshow) ---------------- */
+/* ---------------- CERTIFICATES (individual animated cards) ---------------- */
 
-// Cross-fading certificate carousel. All four certificates live inside a
-// single luxury glass card. Every ~4 seconds the current cert fades out
-// smoothly and the next one fades in. Users can also click the dots to
-// jump directly to a specific certificate.
 const certificates = [
-  { title: "AI Fundamentals",     issuer: "Microsoft Learn",        year: "2024", img: aiCertAsset.url },
-  { title: "Graphic Designing",   issuer: "Pixel Nexus Solutions",  year: "2020", img: gdCertAsset.url },
-  { title: "Digital Marketing",   issuer: "Saylani Mass Training",  year: "2020", img: saylaniCertAsset.url },
-  { title: "Social Media Cert.",  issuer: "HubSpot Academy",        year: "2023", img: hubspotCertAsset.url },
+  { title: "AI Fundamentals",     issuer: "Microsoft Learn",        year: "2024", img: aiCertAsset.url, tint: "from-purple/25 to-sky/20" },
+  { title: "Graphic Designing",   issuer: "Pixel Nexus Solutions",  year: "2020", img: gdCertAsset.url, tint: "from-pink/25 to-purple/20" },
+  { title: "Digital Marketing",   issuer: "Saylani Mass Training",  year: "2020", img: saylaniCertAsset.url, tint: "from-sky/25 to-cyan/20" },
+  { title: "Social Media Cert.",  issuer: "HubSpot Academy",        year: "2023", img: hubspotCertAsset.url, tint: "from-cyan/25 to-sky/20" },
 ];
 
 const Certificates = () => {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    // Auto-advance the slideshow every 4.5s.
-    const t = setInterval(() => setI((n) => (n + 1) % certificates.length), 4500);
-    return () => clearInterval(t);
-  }, []);
-  const c = certificates[i];
+  const reduce = useReducedMotion();
   return (
     <Section
       id="certificates"
@@ -533,75 +523,54 @@ const Certificates = () => {
       title={<>Verified <span className="gradient-text">craft & credentials.</span></>}
       kicker="Continuously certified across AI, digital marketing, social media and design."
     >
-      <div className="grid lg:grid-cols-[1.3fr_1fr] gap-8 items-center">
-        {/* Slideshow card */}
-        <Floaty amount={8} duration={8}>
-          <div className="relative glass-strong glass-border-glow rounded-[36px] p-4 sm:p-6 aspect-[4/3] overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={c.title}
-                initial={{ opacity: 0, scale: 0.97, y: 12 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 1.02, y: -12 }}
-                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-4 sm:inset-6 rounded-3xl overflow-hidden ring-1 ring-white/60 bg-white"
-              >
-                <img
-                  src={c.img}
-                  alt={`${c.title} — ${c.issuer}`}
-                  loading="lazy"
-                  className="h-full w-full object-contain"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-              </motion.div>
-            </AnimatePresence>
-            {/* Dots */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 glass rounded-full px-3 py-1.5 z-10">
-              {certificates.map((_, k) => (
-                <button
-                  key={k}
-                  aria-label={`Show certificate ${k + 1}`}
-                  onClick={() => setI(k)}
-                  className={`h-2 rounded-full transition-all ${k === i ? "w-6 gradient-brand" : "w-2 bg-muted"}`}
-                />
-              ))}
-            </div>
-          </div>
-        </Floaty>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        {certificates.map((cert, idx) => (
+          <motion.div
+            key={cert.title}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ ...spring, delay: idx * 0.12 }}
+            whileHover={reduce ? undefined : { y: -10, transition: { type: "spring", stiffness: 260, damping: 18 } }}
+            className="group relative glass glass-border-glow rounded-[28px] p-5 overflow-hidden cursor-default"
+          >
+            {/* ambient gradient blob */}
+            <div
+              aria-hidden
+              className={`absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 blur-3xl bg-gradient-to-br ${cert.tint} transition-opacity duration-500 group-hover:opacity-70`}
+            />
 
-        {/* Details */}
-        <div>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={c.title}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="inline-flex items-center gap-2 glass rounded-full px-3 py-1 mb-4 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
-                <Award size={12} className="text-primary" /> {c.year}
+            {/* image */}
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden ring-1 ring-white/60 bg-white mb-5">
+              <img
+                src={cert.img}
+                alt={`${cert.title} — ${cert.issuer}`}
+                loading="lazy"
+                className="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+            </div>
+
+            {/* meta */}
+            <div className="relative">
+              <div className="inline-flex items-center gap-1.5 glass rounded-full px-2.5 py-1 mb-3 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+                <Award size={11} className="text-primary" /> {cert.year}
               </div>
-              <h3 className="font-display text-3xl sm:text-4xl font-semibold text-balance leading-tight">
-                {c.title}
-              </h3>
-              <p className="mt-3 text-lg text-muted-foreground">
-                Issued by <span className="text-foreground font-medium">{c.issuer}</span>
-              </p>
-            </motion.div>
-          </AnimatePresence>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {certificates.map((cert, k) => (
-              <button
-                key={cert.title}
-                onClick={() => setI(k)}
-                className={`glass rounded-full px-3 py-1.5 text-xs transition-all ${k === i ? "ring-2 ring-primary/50 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >
+              <h3 className="font-display text-xl sm:text-2xl font-semibold leading-tight text-balance">
                 {cert.title}
-              </button>
-            ))}
-          </div>
-        </div>
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Issued by <span className="text-foreground font-medium">{cert.issuer}</span>
+              </p>
+            </div>
+
+            {/* bottom glow line */}
+            <div
+              aria-hidden
+              className="absolute bottom-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            />
+          </motion.div>
+        ))}
       </div>
     </Section>
   );
